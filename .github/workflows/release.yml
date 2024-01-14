@@ -42,5 +42,5 @@ jobs:
           # [possible values: all, unix, windows, none]
           zip: all
           # (required) GitHub token for uploading assets to GitHub Releases.
-          archive: $bin-$tag-$target
+          archive: $tag-$target
           token: ${{ secrets.GITHUB_TOKEN }}
