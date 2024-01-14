@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>裁判文书网 - {{case.case_id}} - {{case.case_name}}</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <main class="search-results">
+        <div class="search-result-text">
+            <h3 class="underlineonhover">{{ case.case_name }}</h3>
+            <p><b>裁判日期</b>：{{ case.judgment_date }}</b></p>
+            <p><b>发布日期</b>：{{ case.public_date }}</p>
+            <p><b>案号</b>：{{case.case_id}}</p>
+            <p><b>法院</b>：{{ case.court }}</p>
+            <p><b>案件类型</b>：{{ case.case_type }}</p>
+            <p><b>审理程序</b>：{{ case.procedure }}</p>
+            <p><b>所属地区</b>：{{ case.region }}</p>
+            <p><b>当事人</b>：{{ case.parties }}</p>
+            <p><b>案由</b>：{{ case.cause }}</p>
+            <p><b>原始链接</b>: <a href="{{case.url}}" target="_blank">{{ case.url }}</a></p>
+            <p><b>法律依据</b>：{{ case.legal_basis }}</p>
+            <p></p>
+            <p></p>
+            <p><b>全文</b>：{{ case.full_text }}</p>            
+        </div>
+    </main>
+</body>
+</html> 

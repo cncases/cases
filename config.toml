@@ -1,0 +1,6 @@
+db = "rocksdb"
+index_path ="search_index"
+addr = "127.0.0.1:8081"
+
+# The raw data path you downloaded from the torrent, and you must NOT unzip it.
+raw_data_path = "裁判文书全量数据（已完成）"
