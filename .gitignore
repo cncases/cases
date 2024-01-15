@@ -1,1 +1,3 @@
 /target
+/search_index
+/rocksdb

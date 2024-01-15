@@ -25,7 +25,7 @@ fn main() {
     let parties = schema.get_field("parties").unwrap();
     let cause = schema.get_field("cause").unwrap();
     let legal_basis = schema.get_field("legal_basis").unwrap();
-    // let full_text = schema.get_field("full_text").unwrap();
+    let full_text = schema.get_field("full_text").unwrap();
 
     let index_path = Path::new(&CONFIG.index_path);
     if !index_path.exists() {
@@ -54,16 +54,18 @@ fn main() {
                     let mut rdr = csv::Reader::from_reader(file);
                     for result in rdr.deserialize() {
                         id += 1;
-                        let case: Case = result.unwrap();
-                        // case.full_text =
-                        //     case.full_text
-                        //         .split_whitespace()
-                        //         .fold(String::new(), |mut acc, x| {
-                        //             acc.push_str("<p>");
-                        //             acc.push_str(x);
-                        //             acc.push_str("</p>");
-                        //             acc
-                        //         });
+                        let mut case: Case = result.unwrap();
+                        if CONFIG.index_with_full_text {
+                            case.full_text = case.full_text.split_whitespace().fold(
+                                String::new(),
+                                |mut acc, x| {
+                                    acc.push_str("<p>");
+                                    acc.push_str(x);
+                                    acc.push_str("</p>");
+                                    acc
+                                },
+                            );
+                        }
 
                         let mut doc = Document::default();
                         doc.add_text(id_field, id);
@@ -100,9 +102,9 @@ fn main() {
                         if !case.legal_basis.is_empty() {
                             doc.add_text(legal_basis, &case.legal_basis);
                         }
-                        // if !case.full_text.is_empty() {
-                        //     doc.add_text(full_text, &case.full_text);
-                        // }
+                        if CONFIG.index_with_full_text && !case.full_text.is_empty() {
+                            doc.add_text(full_text, &case.full_text);
+                        }
                         writer.add_document(doc).unwrap();
 
                         if id % 1000 == 0 {

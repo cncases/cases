@@ -1,11 +1,10 @@
 pub use config::CONFIG;
 pub use controller::{case, logo, search, style};
 use rocksdb::DB;
-pub use tantivy::Tan;
-
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tantivy::Searcher;
+pub use tantivy::Tan;
 
 mod config;
 mod controller;
@@ -49,21 +48,4 @@ pub struct Case {
     pub legal_basis: String,
     #[serde(rename(deserialize = "全文"))]
     pub full_text: String,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct Meta {
-    pub id: u32,
-    pub url: String,
-    pub case_id: String,
-    pub case_name: String,
-    pub court: String,
-    pub region: String,
-    pub case_type: String,
-    pub procedure: String,
-    pub judgment_date: String,
-    pub public_date: String,
-    pub parties: String,
-    pub cause: String,
-    pub legal_basis: String,
 }

@@ -1,5 +1,6 @@
 db = "rocksdb"
 index_path ="search_index"
+index_with_full_text = false
 addr = "127.0.0.1:8081"
 
 # The raw data path you downloaded from the torrent, and you must NOT unzip it.

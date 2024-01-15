@@ -8,6 +8,7 @@ pub static CONFIG: Lazy<Config> = Lazy::new(Config::load_config);
 pub struct Config {
     pub db: String,
     pub index_path: String,
+    pub index_with_full_text: bool,
     pub addr: String,
     pub raw_data_path: Option<String>,
 }
