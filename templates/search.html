@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; script-src 'none'; style-src 'self'; object-src 'none'; font-src 'none'; form-action 'self'; frame-src 'none'; media-src 'none'; manifest-src 'none'; worker-src 'none';">
     <title>裁判文书网</title>
     <link rel="stylesheet" href="/style.css">
 </head>
@@ -12,9 +13,7 @@
             <a href="/"><img src="/logo.png"></a>
             <form id="search" action="/" method="get">
                 <div class="searchbar search-searchbar">
-                    <form class="search-form" action="/search">
-                        <input class="search-input" type="text" id="search" name="search" value="{{ search }}">
-                    </form>
+                    <input class="search-input" type="text" id="search" name="search" value="{{ search }}">
                 </div>
             </form>
         </nav>
