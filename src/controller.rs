@@ -12,7 +12,7 @@ use tantivy::{
     DocAddress, Score,
 };
 
-use crate::{AppState, Case};
+use crate::{AppState, Case, CONFIG};
 
 #[derive(Template)]
 #[template(path = "case.html", escape = "none")]
@@ -38,13 +38,14 @@ pub struct QuerySearch {
 }
 
 #[derive(Template)]
-#[template(path = "search.html", escape = "none")]
+#[template(path = "search.html")]
 pub struct SearchPage {
     search: String,
     offset: usize,
     total: usize,
     cases: Vec<(u32, Case)>,
     search_type: String,
+    enable_full_text: bool,
 }
 
 pub async fn search(
@@ -59,6 +60,7 @@ pub async fn search(
         let query = match input.search_type.as_deref() {
             Some("legal_basis") => format!("legal_basis:{}", search),
             Some("cause") => format!("cause:{}", search),
+            Some("full_text") => format!("full_text:{}", search),
             _ => search.clone(),
         };
         let (query, _) = state.searcher.query_parser.parse_query_lenient(&query);
@@ -90,13 +92,14 @@ pub async fn search(
         }
     }
 
-    let search_type = input.search_type.unwrap_or_else(|| "case_name".to_string());
+    let search_type = input.search_type.unwrap_or_else(|| "default".to_string());
     let body = SearchPage {
         search,
         offset,
         cases,
         total,
         search_type,
+        enable_full_text: CONFIG.index_with_full_text,
     };
 
     into_response(&body)

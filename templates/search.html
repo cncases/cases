@@ -20,17 +20,33 @@
         <nav class="search-second-nav">
             <div>
                 {% match search_type.as_str() %}{% when "legal_basis" %}
-                <a href="/?search={{search}}&search_type=case_name">搜索</a>
+                <a href="/?search={{search}}&search_type=default">搜索</a>
                 <a href="/?search={{search}}&search_type=legal_basis" class="selected">法律依据</a>
                 <a href="/?search={{search}}&search_type=cause">案由</a>
+                {% if enable_full_text %}
+                <a href="/?search={{search}}&search_type=full_text">全文</a>
+                {% endif %}
                 {% when "cause" %}
-                <a href="/?search={{search}}&search_type=case_name">搜索</a>
+                <a href="/?search={{search}}&search_type=default">搜索</a>
                 <a href="/?search={{search}}&search_type=legal_basis">法律依据</a>
                 <a href="/?search={{search}}&search_type=cause" class="selected">案由</a>
-                {% else %}
-                <a href="/?search={{search}}&search_type=case_name" class="selected">搜索</a>
+                {% if enable_full_text %}
+                <a href="/?search={{search}}&search_type=full_text">全文</a>
+                {% endif %}
+                {% when "full_text" %}
+                <a href="/?search={{search}}&search_type=default">搜索</a>
                 <a href="/?search={{search}}&search_type=legal_basis">法律依据</a>
                 <a href="/?search={{search}}&search_type=cause">案由</a>
+                {% if enable_full_text %}
+                <a href="/?search={{search}}&search_type=full_text" class="selected">全文</a>
+                {% endif %}
+                {% else %}
+                <a href="/?search={{search}}&search_type=default" class="selected">搜索</a>
+                <a href="/?search={{search}}&search_type=legal_basis">法律依据</a>
+                <a href="/?search={{search}}&search_type=cause">案由</a>
+                {% if enable_full_text %}
+                <a href="/?search={{search}}&search_type=full_text">全文</a>
+                {% endif %}
                 {% endmatch %}
             </div>
             <div>
