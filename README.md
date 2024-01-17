@@ -14,6 +14,7 @@ https://github.com/cncases/cases/releases
 ### 1. 下载原始数据（102G）
 
 方法一：通过bt下载，种子文件为 `810air.torrent` ，可以从本[仓库](./810air.torrent)下载，也可以通过：https://files.catbox.moe/810air.torrent
+
 方法二：https://pan.baidu.com/s/15jiY3DEpED7ywl-gfPFkYw?pwd=4QrB 提取码：4QrB 
 
 原始数据来源于[马克数据网](https://www.macrodatas.cn/article/1147471898)，文书数量超过8500万，约102G。下载后**不要**解压子文件，将文件路径填写到 `config.toml` 中的 `raw_data_path` 变量中；
