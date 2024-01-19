@@ -7,6 +7,9 @@
 > [!CAUTION]
 > 需要磁盘空间 320G 以上，可能需要数小时的时间
 
+> [!WARNING]
+> 仅在 Linux 上测试过，如果出现 `IO error: ……Too many open files`，可以使用`ulimit -n 10000`命令提高文件描述符上限。
+
 ### 0. 下载程序
 
 https://github.com/cncases/cases/releases
