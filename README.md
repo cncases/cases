@@ -10,9 +10,24 @@
 > [!WARNING]
 > 在 Linux 平台，如果出现 `IO error: ……Too many open files`，可以使用`ulimit -n 10000`命令提高文件描述符上限。
 
-### 0. 下载程序
+### 0. 下载程序并创建配置文件
 
-https://github.com/cncases/cases/releases
+方法一：从 releases 页面下载已编译好的二进制文件（推荐），https://github.com/cncases/cases/releases
+
+方法二：自行编译
+
+```bash
+## 安装 rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+## clone 本仓库
+git clone https://github.com/cncases/cases.git
+
+## 编译，对应程序在 target/release/ 文件夹中
+cargo build -r 
+```
+
+配置文件参考[config.toml](./config.toml)
 
 ### 1. 下载原始数据（102G）
 
