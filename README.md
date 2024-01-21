@@ -8,7 +8,7 @@
 > 需要磁盘空间 320G 以上，可能需要数小时的时间
 
 > [!WARNING]
-> 仅在 Linux 上测试过，如果出现 `IO error: ……Too many open files`，可以使用`ulimit -n 10000`命令提高文件描述符上限。
+> 在 Linux 平台，如果出现 `IO error: ……Too many open files`，可以使用`ulimit -n 10000`命令提高文件描述符上限。
 
 ### 0. 下载程序
 
@@ -16,9 +16,7 @@ https://github.com/cncases/cases/releases
 
 ### 1. 下载原始数据（102G）
 
-方法一：通过bt下载，种子文件为 `810air.torrent` ，可以从本[仓库](./810air.torrent)下载，也可以通过：https://files.catbox.moe/810air.torrent
-
-方法二：https://pan.baidu.com/s/15jiY3DEpED7ywl-gfPFkYw?pwd=4QrB 提取码：4QrB 
+方法：通过bt下载，种子文件为 `810air.torrent` ，可以从本[仓库](./810air.torrent)下载，也可以通过链接 https://files.catbox.moe/810air.torrent
 
 原始数据来源于[马克数据网](https://www.macrodatas.cn/article/1147471898)，文书数量超过8500万，约102G。下载后**不要**解压子文件，将文件路径填写到 `config.toml` 中的 `raw_data_path` 变量中；
 
