@@ -71,10 +71,13 @@
     <div class="pagination">
         {% if cases.len() >= 20 %}
             {% if offset >= 20 %}
-            <a href="/?search={{ search }}&offset={{ offset - 20 }}">上一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/?search={{ search }}&offset={{ offset - 20 }}&search_type={{search_type}}">上一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
             {% endif %}
-        <a href="/?search={{ search }}&offset={{ offset + 20 }}">下一页</a>
+        <a href="/?search={{ search }}&offset={{ offset + 20 }}&search_type={{search_type}}">下一页</a>
         {% endif %}
     </div>
+    <footer>
+        <p>GitHub: <a href="https://github.com/cncases/cases">https://github.com/cncases/cases</a></p>
+    </footer>
 </body>
 </html> 

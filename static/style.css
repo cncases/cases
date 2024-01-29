@@ -1,7 +1,8 @@
-/* Global */
-
 body {
     font-family: arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .nav {
@@ -216,4 +217,10 @@ body {
 
 .pagination a {
     text-decoration: none;
+}
+
+footer{
+    margin-left: 150px;
+    border-top: 2px solid   #eef;
+    margin-top: auto;
 }
