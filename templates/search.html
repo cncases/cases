@@ -18,7 +18,7 @@
             </form>
         </nav>
         <nav class="search-second-nav">
-            <div>
+            <div class="search-type">
                 {% match search_type.as_str() %}{% when "legal_basis" %}
                 <a href="/?search={{search}}&search_type=default">搜索</a>
                 <a href="/?search={{search}}&search_type=legal_basis" class="selected">法律依据</a>
@@ -50,7 +50,7 @@
                 {% endmatch %}
             </div>
             <div>
-                共找到 {{ total }} 条结果
+                找到 {{ total }}，<a class="noline" title="最多导出10000条，调整offset参数可获得更多结果，offset=10000，即可获得第10000~20000条结果" href="/?search={{ search }}&offset={{ offset }}&search_type={{search_type}}&export=true">导出</a>
             </div>
         </nav>
     </header>

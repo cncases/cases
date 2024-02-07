@@ -86,7 +86,7 @@ body {
     width: 575px;
 }
 
-.search-second-nav a {
+.search-second-nav .search-type a {
     font-family: Google Sans, arial, sans-serif;
     color: #777;
     font-size: 14px;
@@ -95,6 +95,10 @@ body {
     line-height: 19px;
     border: 1px solid transparent;
     border-radius: 2px;
+}
+
+.noline {
+    text-decoration: none;
 }
 
 .search-second-nav .selected {

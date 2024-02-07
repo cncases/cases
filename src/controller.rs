@@ -2,7 +2,7 @@ use askama::Template;
 use axum::{
     body::Body,
     extract::{Path, Query, State},
-    http::{self, HeaderMap, HeaderName, HeaderValue, Response, StatusCode},
+    http::{self, header, Response, StatusCode},
     response::IntoResponse,
 };
 use indexmap::IndexSet;
@@ -35,6 +35,7 @@ pub struct QuerySearch {
     search: Option<String>,
     offset: Option<usize>,
     search_type: Option<String>,
+    export: Option<bool>,
 }
 
 #[derive(Template)]
@@ -54,6 +55,8 @@ pub async fn search(
 ) -> impl IntoResponse {
     let offset = input.offset.unwrap_or_default();
     let search = input.search.unwrap_or_default();
+    let export = input.export.unwrap_or_default();
+    let limit = if export { 10000 } else { 20 };
     let mut ids: IndexSet<u32> = IndexSet::with_capacity(20);
     let mut total = 0;
     if !search.is_empty() {
@@ -66,8 +69,9 @@ pub async fn search(
         let (query, _) = state.searcher.query_parser.parse_query_lenient(&query);
         let searcher = state.searcher.reader.searcher();
         total = searcher.search(&query, &Count).unwrap();
+
         let top_docs: Vec<(Score, DocAddress)> = searcher
-            .search(&query, &TopDocs::with_limit(20).and_offset(offset))
+            .search(&query, &TopDocs::with_limit(limit).and_offset(offset))
             .unwrap_or_default();
 
         for (_score, doc_address) in top_docs {
@@ -92,6 +96,59 @@ pub async fn search(
         }
     }
 
+    // export to csv
+    if export {
+        let fname = format!("{}_{}_{}_{}.csv", search, total, limit, offset);
+        let body = Vec::new();
+        let mut wtr = csv::Writer::from_writer(body);
+        wtr.write_record([
+            "id",
+            "url",
+            "case_id",
+            "case_name",
+            "court",
+            "region",
+            "case_type",
+            "procedure",
+            "judgment_date",
+            "public_date",
+            "parties",
+            "cause",
+            "legal_basis",
+            "full_text",
+        ])
+        .unwrap();
+        for (id, case) in &cases {
+            wtr.write_record([
+                &id.to_string(),
+                &case.url,
+                &case.case_id,
+                &case.case_name,
+                &case.court,
+                &case.region,
+                &case.case_type,
+                &case.procedure,
+                &case.judgment_date,
+                &case.public_date,
+                &case.parties,
+                &case.cause,
+                &case.legal_basis,
+                &case.full_text,
+            ])
+            .unwrap();
+        }
+        wtr.flush().unwrap();
+
+        let headers = [
+            (header::CONTENT_TYPE, "text/csv; charset=utf-8"),
+            (
+                header::CONTENT_DISPOSITION,
+                &format!("attachment; filename={}", fname),
+            ),
+        ];
+        return (headers, wtr.into_inner().unwrap()).into_response();
+    }
+
     let search_type = input.search_type.unwrap_or_else(|| "default".to_string());
     let body = SearchPage {
         search,
@@ -105,34 +162,28 @@ pub async fn search(
     into_response(&body)
 }
 
-pub async fn style() -> (HeaderMap, &'static str) {
-    let mut headers = HeaderMap::new();
+pub async fn style() -> impl IntoResponse {
+    let headers = [
+        (header::CONTENT_TYPE, "text/css"),
+        (
+            header::CACHE_CONTROL,
+            "public, max-age=1209600, s-maxage=86400",
+        ),
+    ];
 
-    headers.insert(
-        HeaderName::from_static("content-type"),
-        HeaderValue::from_static("text/css"),
-    );
-    headers.insert(
-        HeaderName::from_static("cache-control"),
-        HeaderValue::from_static("public, max-age=1209600, s-maxage=86400"),
-    );
-
-    (headers, &include_str!("../static/style.css"))
+    (headers, include_str!("../static/style.css"))
 }
 
-pub async fn logo() -> (HeaderMap, &'static [u8]) {
-    let mut headers = HeaderMap::new();
+pub async fn logo() -> impl IntoResponse {
+    let headers = [
+        (header::CONTENT_TYPE, "image/png"),
+        (
+            header::CACHE_CONTROL,
+            "public, max-age=1209600, s-maxage=86400",
+        ),
+    ];
 
-    headers.insert(
-        HeaderName::from_static("content-type"),
-        HeaderValue::from_static("image/png"),
-    );
-    headers.insert(
-        HeaderName::from_static("cache-control"),
-        HeaderValue::from_static("public, max-age=1209600, s-maxage=86400"),
-    );
-
-    (headers, &include_bytes!("../static/logo.png").as_slice())
+    (headers, include_bytes!("../static/logo.png").as_slice())
 }
 
 fn into_response<T: Template>(t: &T) -> Response<Body> {
