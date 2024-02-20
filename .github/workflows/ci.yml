@@ -10,7 +10,7 @@ on:
       
 jobs:
   cargo:
-    name: Cargo test, clippy and doc
+    name: Cargo
     runs-on: ubuntu-latest
     permissions:
       contents: write
