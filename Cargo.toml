@@ -11,7 +11,7 @@ bincode = "1.3.3"
 csv = "1"
 indexmap = "2"
 once_cell = "1"
-rocksdb = "0.21.0"
+rocksdb = "0.22.0"
 serde = { version = "1", features = ["derive"] }
 stop-words = "0.8.0"
 tantivy = "0.21.1"
