@@ -18,7 +18,7 @@ tantivy = "0.21.1"
 tantivy-jieba = "0.10.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tower = "0.4.13"
-tower-http = { version = "0.5.0", features = ["compression-br", "trace", "timeout"] }
+tower-http = { version = "0.5.2", features = ["compression-br", "trace", "timeout"] }
 tracing = { version = "0.1", features = ["release_max_level_info", "max_level_info"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 zip = { version = "0.6", default-features = false, features = ["deflate"] }
