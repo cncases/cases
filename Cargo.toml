@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 askama = { version = "0.12", default-features = false }
-axum = { version = "0.7", features = ["http2", "query", "tokio"], default-features = false }
+axum = { version = "0.7", features = ["http2", "query", "tokio", "http1"], default-features = false }
 basic-toml = "*"
 bincode = "1.3.3"
 csv = "1"
@@ -22,6 +22,7 @@ tower-http = { version = "0.5.2", features = ["compression-br", "trace", "timeou
 tracing = { version = "0.1", features = ["release_max_level_info", "max_level_info"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 zip = { version = "0.6", default-features = false, features = ["deflate"] }
+zstd-sys = "=2.0.9"
 
 [dev-dependencies]
 jieba-rs = "0.6"
