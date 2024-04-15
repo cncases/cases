@@ -14,7 +14,7 @@ once_cell = "1"
 rocksdb = "0.22.0"
 serde = { version = "1", features = ["derive"] }
 stop-words = "0.8.0"
-tantivy = "0.21.1"
+tantivy = "0.22.0"
 tantivy-jieba = "0.10.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tower = "0.4.13"
