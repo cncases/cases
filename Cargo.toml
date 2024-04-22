@@ -25,7 +25,7 @@ zip = { version = "0.6", default-features = false, features = ["deflate"] }
 zstd-sys = "=2.0.9"
 
 [dev-dependencies]
-jieba-rs = "0.6"
+jieba-rs = "0.7"
 
 [target.'cfg(not(target_env = "msvc"))'.dependencies]
 tikv-jemallocator = "0.5"
