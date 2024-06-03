@@ -21,7 +21,7 @@ tower = "0.4.13"
 tower-http = { version = "0.5.2", features = ["compression-br", "trace", "timeout"] }
 tracing = { version = "0.1", features = ["release_max_level_info", "max_level_info"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-zip = { version = "0.6", default-features = false, features = ["deflate"] }
+zip = { version = "2.1", default-features = false, features = ["deflate"] }
 zstd-sys = "=2.0.9"
 
 [dev-dependencies]
