@@ -14,18 +14,17 @@ once_cell = "1"
 rocksdb = "0.22.0"
 serde = { version = "1", features = ["derive"] }
 stop-words = "0.8.0"
-tantivy = "0.21.1"
-tantivy-jieba = "0.10.0"
+tantivy = "0.22.0"
+tantivy-jieba = "0.11.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tower = "0.4.13"
 tower-http = { version = "0.5.2", features = ["compression-br", "trace", "timeout"] }
 tracing = { version = "0.1", features = ["release_max_level_info", "max_level_info"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-zip = { version = "0.6", default-features = false, features = ["deflate"] }
-zstd-sys = "=2.0.9"
+zip = { version = "2.1.3", default-features = false, features = ["deflate"] }
 
 [dev-dependencies]
-jieba-rs = "0.6"
+jieba-rs = "0.7.0"
 
 [target.'cfg(not(target_env = "msvc"))'.dependencies]
 tikv-jemallocator = "0.5"

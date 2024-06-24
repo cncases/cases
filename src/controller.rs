@@ -9,7 +9,8 @@ use indexmap::IndexSet;
 use serde::Deserialize;
 use tantivy::{
     collector::{Count, TopDocs},
-    DocAddress, Score,
+    schema::Value,
+    DocAddress, Score, TantivyDocument,
 };
 
 use crate::{AppState, Case, CONFIG};
@@ -76,11 +77,11 @@ pub async fn search(
 
         for (_score, doc_address) in top_docs {
             if let Some(id) = searcher
-                .doc(doc_address)
+                .doc::<TantivyDocument>(doc_address)
                 .unwrap()
                 .get_first(state.searcher.id)
                 .unwrap()
-                .as_text()
+                .as_str()
             {
                 ids.insert(id.parse().unwrap());
             }

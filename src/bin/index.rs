@@ -1,7 +1,7 @@
 use std::{fs, path::Path};
 
 use cases::{Case, Tan, CONFIG};
-use tantivy::Document;
+use tantivy::TantivyDocument;
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -67,7 +67,7 @@ fn main() {
                             );
                         }
 
-                        let mut doc = Document::default();
+                        let mut doc = TantivyDocument::default();
                         doc.add_text(id_field, id);
                         if !case.case_id.is_empty() {
                             doc.add_text(case_id, &case.case_id);
