@@ -3,13 +3,6 @@ use rocksdb::{WriteBatchWithTransaction, DB};
 use std::fs;
 use tracing::info;
 
-#[cfg(not(target_env = "msvc"))]
-use tikv_jemallocator::Jemalloc;
-
-#[cfg(not(target_env = "msvc"))]
-#[global_allocator]
-static GLOBAL: Jemalloc = Jemalloc;
-
 fn main() {
     tracing_subscriber::fmt().init();
     convert(CONFIG.raw_data_path.as_ref().unwrap(), &CONFIG.db);
