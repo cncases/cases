@@ -1,6 +1,6 @@
 pub use config::CONFIG;
 pub use controller::{case, logo, search, style};
-use redb::{Database, TableDefinition};
+use rocksdb::DB;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tantivy::Searcher;
@@ -10,11 +10,9 @@ mod config;
 mod controller;
 mod tantivy;
 
-pub const TABLE: TableDefinition<u32, Vec<u8>> = TableDefinition::new("cases");
-
 #[derive(Clone)]
 pub struct AppState {
-    pub db: Arc<Database>,
+    pub db: Arc<DB>,
     pub searcher: Arc<Searcher>,
 }
 

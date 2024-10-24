@@ -1,6 +1,6 @@
 use axum::{routing::get, Router};
 use cases::{case, logo, search, style, AppState, Tan, CONFIG};
-use redb::Database;
+use rocksdb::{Options, DB};
 use std::{net::SocketAddr, sync::Arc, time::Duration};
 use tokio::net::TcpListener;
 use tower::ServiceBuilder;
@@ -24,7 +24,7 @@ async fn main() {
 
     let searcher = Arc::new(Tan::searcher().unwrap());
 
-    let db = Database::create(CONFIG.db.as_str()).unwrap();
+    let db = DB::open_for_read_only(&Options::default(), CONFIG.db.as_str(), true).unwrap();
     let app_state = AppState {
         db: Arc::new(db),
         searcher,

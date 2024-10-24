@@ -8,6 +8,13 @@ use std::{
     io::Write,
 };
 
+#[cfg(not(target_env = "msvc"))]
+use tikv_jemallocator::Jemalloc;
+
+#[cfg(not(target_env = "msvc"))]
+#[global_allocator]
+static GLOBAL: Jemalloc = Jemalloc;
+
 fn main() {
     tracing_subscriber::fmt().init();
     unzip(CONFIG.raw_data_path.as_ref().unwrap());

@@ -1,8 +1,14 @@
-use cases::{Case, CONFIG, TABLE};
-use redb::Database;
+use cases::{Case, CONFIG};
+use rocksdb::{WriteBatchWithTransaction, DB};
 use std::fs;
 use tracing::info;
-use zstd::stream::copy_encode;
+
+#[cfg(not(target_env = "msvc"))]
+use tikv_jemallocator::Jemalloc;
+
+#[cfg(not(target_env = "msvc"))]
+#[global_allocator]
+static GLOBAL: Jemalloc = Jemalloc;
 
 fn main() {
     tracing_subscriber::fmt().init();
@@ -13,7 +19,7 @@ fn convert(raw_path: &str, db_path: &str) {
     let time = std::time::Instant::now();
     let mut ft = Vec::with_capacity(1024);
     let mut id: u32 = 0;
-
+    let db = DB::open_default(db_path).unwrap();
     for subdir in fs::read_dir(raw_path).unwrap() {
         let subdir = subdir.unwrap();
         let subdir_path = subdir.path().to_str().unwrap().to_string();
@@ -27,15 +33,11 @@ fn convert(raw_path: &str, db_path: &str) {
                 let raw_name = file.name();
                 if raw_name.ends_with(".csv") {
                     let mut rdr = csv::Reader::from_reader(file);
-                    let db = Database::create(db_path).unwrap();
                     for result in rdr.deserialize() {
                         id += 1;
-                        let read_txn = db.begin_read().unwrap();
-                        if let Ok(table) = read_txn.open_table(TABLE) {
-                            if table.get(id).unwrap().is_some() {
-                                info!("skipping {}", id);
-                                continue;
-                            }
+                        if db.key_may_exist(id.to_be_bytes()) {
+                            info!("skipping {}", id);
+                            continue;
                         }
 
                         let mut case: Case = result.unwrap();
@@ -51,16 +53,12 @@ fn convert(raw_path: &str, db_path: &str) {
                         ft.push((id, case));
 
                         if ft.len() >= 1024 {
-                            let write_txn = db.begin_write().unwrap();
-                            for (id, case) in ft.drain(..) {
-                                let mut table = write_txn.open_table(TABLE).unwrap();
-                                let encoded = bincode::serialize(&case).unwrap();
-                                let mut compressed = Vec::new();
-                                copy_encode(&encoded[..], &mut compressed, 9).unwrap();
-                                table.insert(id, compressed).unwrap();
+                            info!("inserting {id}, time: {}", time.elapsed().as_secs());
+                            let mut batch = WriteBatchWithTransaction::<false>::default();
+                            for (id, case) in ft.iter() {
+                                batch.put((*id).to_be_bytes(), bincode::serialize(case).unwrap());
                             }
-                            write_txn.commit().unwrap();
-                            info!("{}, time {}", id, time.elapsed().as_secs());
+                            db.write(batch).unwrap();
                             ft.clear();
                         }
                     }
@@ -72,16 +70,13 @@ fn convert(raw_path: &str, db_path: &str) {
     }
 
     if !ft.is_empty() {
-        let db = Database::create(db_path).unwrap();
-        let write_txn = db.begin_write().unwrap();
-        for (id, case) in ft.drain(..) {
-            let mut table = write_txn.open_table(TABLE).unwrap();
-            table
-                .insert(id, bincode::serialize(&case).unwrap())
-                .unwrap();
+        info!("inserting {id}");
+        let mut batch = WriteBatchWithTransaction::<false>::default();
+        for (id, case) in ft.iter() {
+            batch.put((*id).to_be_bytes(), bincode::serialize(case).unwrap());
         }
-        write_txn.commit().unwrap();
-        info!("{}, time {}", id, time.elapsed().as_secs());
+        db.write(batch).unwrap();
         ft.clear();
+        drop(db);
     }
 }
