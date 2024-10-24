@@ -925,7 +925,6 @@ dependencies = [
  "glob",
  "libc",
  "libz-sys",
- "zstd-sys",
 ]
 
 [[package]]
@@ -965,6 +964,12 @@ checksum = "234cf4f4a04dc1f57e24b96cc0cd600cf2af460d4161ac5ecdd0af8e1f3b2a38"
 dependencies = [
  "hashbrown",
 ]
+
+[[package]]
+name = "lz4_flex"
+version = "0.11.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75761162ae2b0e580d7e7c390558127e5f01b4194debd6221fd8c207fc80e3f5"
 
 [[package]]
 name = "matchers"
@@ -1565,6 +1570,7 @@ dependencies = [
  "levenshtein_automata",
  "log",
  "lru",
+ "lz4_flex",
  "measure_time",
  "memmap2",
  "num_cpus",
@@ -1590,7 +1596,6 @@ dependencies = [
  "time",
  "uuid",
  "winapi",
- "zstd",
 ]
 
 [[package]]

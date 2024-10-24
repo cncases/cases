@@ -10,10 +10,10 @@ basic-toml = "*"
 bincode = "1.3.3"
 csv = "1"
 indexmap = "2"
-rocksdb = { version = "0.22.0", default-features = false, features = ["zstd"] }
+rocksdb = { version = "0.22.0", default-features = false, features = ["snappy"] }
 serde = { version = "1", features = ["derive"] }
 stop-words = "0.8.0"
-tantivy = { version = "0.22.0", default-features = false, features = ["zstd", "mmap", "stopwords"] }
+tantivy = "0.22.0"
 tantivy-jieba = "0.11.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tower = "0.5.1"
