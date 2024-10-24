@@ -7,13 +7,15 @@ use axum::{
 };
 use indexmap::IndexSet;
 use serde::Deserialize;
+use std::io::Cursor;
 use tantivy::{
     collector::{Count, TopDocs},
     schema::Value,
     DocAddress, Score, TantivyDocument,
 };
+use zstd::decode_all;
 
-use crate::{AppState, Case, CONFIG};
+use crate::{AppState, Case, CONFIG, TABLE};
 
 #[derive(Template)]
 #[template(path = "case.html", escape = "none")]
@@ -22,8 +24,11 @@ pub struct CasePage {
 }
 
 pub async fn case(State(state): State<AppState>, Path(id): Path<u32>) -> impl IntoResponse {
-    if let Some(v) = state.db.get(id.to_be_bytes()).unwrap() {
-        let case: Case = bincode::deserialize(&v).unwrap();
+    let read_txn = state.db.begin_read().unwrap();
+    let table = read_txn.open_table(TABLE).unwrap();
+    if let Some(v) = table.get(id).unwrap() {
+        let uncompressed = decode_all(Cursor::new(v.value())).unwrap();
+        let case: Case = bincode::deserialize(&uncompressed).unwrap();
         let case = CasePage { case };
         into_response(&case)
     } else {
@@ -89,9 +94,12 @@ pub async fn search(
     }
 
     let mut cases = Vec::with_capacity(ids.len());
+    let read_txn = state.db.begin_read().unwrap();
+    let table = read_txn.open_table(TABLE).unwrap();
     for id in ids {
-        if let Some(v) = state.db.get(id.to_be_bytes()).unwrap() {
-            let mut case: Case = bincode::deserialize(&v).unwrap();
+        if let Some(v) = table.get(id).unwrap() {
+            let uncompressed = decode_all(Cursor::new(v.value())).unwrap();
+            let mut case: Case = bincode::deserialize(&uncompressed).unwrap();
             case.full_text = case.full_text.replace("<p>", " ").replace("</p>", " ");
             cases.push((id, case));
         }
