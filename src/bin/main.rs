@@ -22,13 +22,17 @@ async fn main() {
     let addr: SocketAddr = CONFIG.addr.parse().unwrap();
     let searcher = Arc::new(Tan::searcher().unwrap());
 
-    let keyspace = Config::new(CONFIG.db.as_str()).open().unwrap();
+    let keyspace = Config::new(CONFIG.db.as_str())
+        .max_write_buffer_size(256_000_000)
+        .open()
+        .unwrap();
+    
     let db = keyspace
         .open_partition(
             "cases", 
             PartitionCreateOptions::default()
-                .max_memtable_size(64_000_000)
-                .with_kv_separation(KvSeparationOptions::default().separation_threshold(1_000).file_target_size(256_000_000))
+                .max_memtable_size(128_000_000)
+                .with_kv_separation(KvSeparationOptions::default().separation_threshold(750).file_target_size(256_000_000))
        )
         .unwrap();
     let app_state = AppState { db, searcher };
