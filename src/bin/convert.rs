@@ -1,5 +1,5 @@
 use cases::{Case, CONFIG};
-use rocksdb::{WriteBatchWithTransaction, DB};
+use fjall::Config;
 use std::fs;
 use tracing::info;
 
@@ -12,7 +12,10 @@ fn convert(raw_path: &str, db_path: &str) {
     let time = std::time::Instant::now();
     let mut ft = Vec::with_capacity(1024);
     let mut id: u32 = 0;
-    let db = DB::open_default(db_path).unwrap();
+    let keyspace = Config::new(db_path).open().unwrap();
+    let db = keyspace
+        .open_partition("cases", Default::default())
+        .unwrap();
     for subdir in fs::read_dir(raw_path).unwrap() {
         let subdir = subdir.unwrap();
         let subdir_path = subdir.path().to_str().unwrap().to_string();
@@ -28,7 +31,7 @@ fn convert(raw_path: &str, db_path: &str) {
                     let mut rdr = csv::Reader::from_reader(file);
                     for result in rdr.deserialize() {
                         id += 1;
-                        if db.key_may_exist(id.to_be_bytes()) {
+                        if db.contains_key(id.to_be_bytes()).unwrap() {
                             info!("skipping {}", id);
                             continue;
                         }
@@ -45,13 +48,17 @@ fn convert(raw_path: &str, db_path: &str) {
                                 });
                         ft.push((id, case));
 
-                        if ft.len() >= 1024 {
+                        if ft.len() >= 10240 {
                             info!("inserting {id}, time: {}", time.elapsed().as_secs());
-                            let mut batch = WriteBatchWithTransaction::<false>::default();
+                            let mut batch = keyspace.batch();
                             for (id, case) in ft.iter() {
-                                batch.put((*id).to_be_bytes(), bincode::serialize(case).unwrap());
+                                batch.insert(
+                                    &db,
+                                    (*id).to_be_bytes(),
+                                    bincode::serialize(case).unwrap(),
+                                );
                             }
-                            db.write(batch).unwrap();
+                            batch.commit().unwrap();
                             ft.clear();
                         }
                     }
@@ -63,13 +70,12 @@ fn convert(raw_path: &str, db_path: &str) {
     }
 
     if !ft.is_empty() {
-        info!("inserting {id}");
-        let mut batch = WriteBatchWithTransaction::<false>::default();
+        info!("inserting {id}, time: {}", time.elapsed().as_secs());
+        let mut batch = keyspace.batch();
         for (id, case) in ft.iter() {
-            batch.put((*id).to_be_bytes(), bincode::serialize(case).unwrap());
+            batch.insert(&db, (*id).to_be_bytes(), bincode::serialize(case).unwrap());
         }
-        db.write(batch).unwrap();
+        batch.commit().unwrap();
         ft.clear();
-        drop(db);
     }
 }

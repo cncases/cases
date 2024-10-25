@@ -1,6 +1,6 @@
 pub use config::CONFIG;
 pub use controller::{case, logo, search, style};
-use rocksdb::DB;
+use fjall::PartitionHandle;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tantivy::Searcher;
@@ -12,7 +12,7 @@ mod tantivy;
 
 #[derive(Clone)]
 pub struct AppState {
-    pub db: Arc<DB>,
+    pub db: PartitionHandle,
     pub searcher: Arc<Searcher>,
 }
 
