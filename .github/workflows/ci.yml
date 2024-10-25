@@ -1,9 +1,6 @@
 name: CHECK
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - '**'
