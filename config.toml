@@ -1,4 +1,4 @@
-db = "./rocksdb"  # path to store rocksdb
+db = "fjall"  # path to store rocksdb
 index_path ="./search_index"  # path to store index
 index_with_full_text = false  # whether establish full-text index
 addr = "127.0.0.1:8081" # If allow LAN access, change it to "0.0.0.0:port".
