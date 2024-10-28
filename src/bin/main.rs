@@ -4,12 +4,8 @@ use fjall::Config;
 use std::{net::SocketAddr, sync::Arc, time::Duration};
 use tokio::net::TcpListener;
 use tower::ServiceBuilder;
-use tower_http::{
-    compression::CompressionLayer,
-    timeout::TimeoutLayer,
-    trace::{DefaultMakeSpan, TraceLayer},
-};
-use tracing::{info, Level};
+use tower_http::{compression::CompressionLayer, timeout::TimeoutLayer};
+use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[tokio::main]
@@ -30,7 +26,6 @@ async fn main() {
 
     let middleware_stack = ServiceBuilder::new()
         .layer(CompressionLayer::new())
-        .layer(TraceLayer::new_for_http().make_span_with(DefaultMakeSpan::new().level(Level::INFO)))
         .layer(TimeoutLayer::new(Duration::from_secs(10)));
 
     let app = Router::new()
