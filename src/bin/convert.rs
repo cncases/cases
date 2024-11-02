@@ -2,9 +2,13 @@ use cases::{Case, CONFIG};
 use fjall::{Config, KvSeparationOptions, PartitionCreateOptions};
 use std::fs;
 use tracing::info;
+use tracing_subscriber::{layer::SubscriberExt as _, util::SubscriberInitExt};
 
 fn main() {
-    tracing_subscriber::fmt().init();
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::EnvFilter::new("info,fjall=warn"))
+        .with(tracing_subscriber::fmt::layer())
+        .init();
     convert(CONFIG.raw_data_path.as_ref().unwrap(), &CONFIG.db);
 }
 
