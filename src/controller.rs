@@ -12,6 +12,7 @@ use tantivy::{
     schema::Value,
     DocAddress, Score, TantivyDocument,
 };
+use tracing::info;
 
 use crate::{AppState, Case, CONFIG};
 
@@ -61,6 +62,7 @@ pub async fn search(
     let mut ids: IndexSet<u32> = IndexSet::with_capacity(20);
     let mut total = 0;
     if !search.is_empty() {
+        info!("searching: {}", search);
         let query = match input.search_type.as_deref() {
             Some("legal_basis") => format!("legal_basis:{}", search),
             Some("cause") => format!("cause:{}", search),
