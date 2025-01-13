@@ -554,9 +554,9 @@ checksum = "e8c02a5121d4ea3eb16a80748c74f5549a5665e4c21333c6098f283870fbdea6"
 
 [[package]]
 name = "fjall"
-version = "2.3.2"
+version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b81f20307b8921d07c7a50a77a8a23babb68f05074f74caca60b97fecb2f4bc"
+checksum = "80910a26e4fb5e5393ff64d293602ac1ade56cf4d14d244c02a7d4ddcd5f10bc"
 dependencies = [
  "byteorder",
  "dashmap",
@@ -949,9 +949,9 @@ dependencies = [
 
 [[package]]
 name = "lsm-tree"
-version = "2.3.2"
+version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ebbbb9fba74d14f484f842290e2a21802105e10fdaec4187bbee5220aa5fbd2e"
+checksum = "4d858efa63a32a286a06aa3968f3ed09811d556697e9f9804aa72ea679ed3b83"
 dependencies = [
  "byteorder",
  "crossbeam-skiplist",
@@ -2031,9 +2031,9 @@ checksum = "830b7e5d4d90034032940e4ace0d9a9a057e7a45cd94e6c007832e39edb82f6d"
 
 [[package]]
 name = "value-log"
-version = "1.1.1"
+version = "1.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "71f2774a6212a226657ca9ce1aae573b711eb014ce7590b48fc3b483d7d47bbe"
+checksum = "1f90495556d09c3026f7f3897f8a7db59c8c701082e32dcf58c2319062ae1eb0"
 dependencies = [
  "byteorder",
  "log",
