@@ -1,7 +1,8 @@
+use bincode::{Decode, Encode};
 pub use config::CONFIG;
 pub use controller::{case, logo, search, style};
 use fjall::PartitionHandle;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use std::sync::Arc;
 use tantivy::Searcher;
 pub use tantivy::Tan;
@@ -16,10 +17,10 @@ pub struct AppState {
     pub searcher: Arc<Searcher>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Encode, Decode, Deserialize)]
 pub struct Case {
     #[serde(rename(deserialize = "原始链接"))]
-    pub url: String,
+    pub doc_id: String,
     #[serde(rename(deserialize = "案号"))]
     pub case_id: String,
     #[serde(rename(deserialize = "案件名称"))]
