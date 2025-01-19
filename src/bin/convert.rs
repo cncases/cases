@@ -1,3 +1,4 @@
+use bincode::config::standard;
 use cases::{Case, CONFIG};
 use fjall::{Config, KvSeparationOptions, PartitionCreateOptions};
 use std::fs;
@@ -32,6 +33,11 @@ fn convert(raw_path: &str, db_path: &str) {
                 ),
         )
         .unwrap();
+    let doc_ids = keyspace
+        .open_partition("doc_ids", PartitionCreateOptions::default())
+        .unwrap();
+    let mut no_doc_id = 0;
+
     for subdir in fs::read_dir(raw_path).unwrap() {
         let subdir = subdir.unwrap();
         let subdir_path = subdir.path().to_str().unwrap().to_string();
@@ -56,6 +62,13 @@ fn convert(raw_path: &str, db_path: &str) {
                         }
 
                         let mut case: Case = result.unwrap();
+                        // https://wenshu.court.gov.cn/website/wenshu/181107ANFZ0BXSK4/index.html?docId=964fc681687d4e47a0a9ace500096dde
+                        case.doc_id = case
+                            .doc_id
+                            .rsplit_once("=")
+                            .unwrap_or_default()
+                            .1
+                            .to_string();
 
                         case.full_text.split_whitespace().for_each(|word| {
                             buf.push_str("<p>");
@@ -75,8 +88,16 @@ fn convert(raw_path: &str, db_path: &str) {
                                 batch.insert(
                                     &db,
                                     (*id).to_be_bytes(),
-                                    bincode::serialize(case).unwrap(),
+                                    bincode::encode_to_vec(case, standard()).unwrap(),
                                 );
+                                let has_full_text = case.full_text.is_empty() as u32;
+                                if !case.doc_id.is_empty() {
+                                    let value =
+                                        [(*id).to_be_bytes(), has_full_text.to_be_bytes()].concat();
+                                    batch.insert(&doc_ids, &case.doc_id, value);
+                                } else {
+                                    no_doc_id += 1;
+                                }
                             }
                             batch.commit().unwrap();
                             ft.clear();
@@ -93,9 +114,22 @@ fn convert(raw_path: &str, db_path: &str) {
         info!("inserting {id}, time: {}", time.elapsed().as_secs());
         let mut batch = keyspace.batch();
         for (id, case) in ft.iter() {
-            batch.insert(&db, (*id).to_be_bytes(), bincode::serialize(case).unwrap());
+            batch.insert(
+                &db,
+                (*id).to_be_bytes(),
+                bincode::encode_to_vec(case, standard()).unwrap(),
+            );
+            let has_full_text = case.full_text.is_empty() as u32;
+            if !case.doc_id.is_empty() {
+                let value = [(*id).to_be_bytes(), has_full_text.to_be_bytes()].concat();
+                batch.insert(&doc_ids, &case.doc_id, value);
+            } else {
+                no_doc_id += 1;
+            }
         }
         batch.commit().unwrap();
         ft.clear();
     }
+
+    info!("Done, no url counts {}", no_doc_id);
 }

@@ -1,6 +1,6 @@
 use axum::{routing::get, Router};
 use cases::{case, logo, search, style, AppState, Tan, CONFIG};
-use fjall::Config;
+use fjall::{Config, KvSeparationOptions, PartitionCreateOptions};
 use std::{net::SocketAddr, sync::Arc, time::Duration};
 use tokio::net::TcpListener;
 use tower::ServiceBuilder;
@@ -20,7 +20,16 @@ async fn main() {
 
     let keyspace = Config::new(CONFIG.db.as_str()).open().unwrap();
     let db = keyspace
-        .open_partition("cases", Default::default())
+        .open_partition(
+            "cases",
+            PartitionCreateOptions::default()
+                .max_memtable_size(128_000_000)
+                .with_kv_separation(
+                    KvSeparationOptions::default()
+                        .separation_threshold(750)
+                        .file_target_size(256_000_000),
+                ),
+        )
         .unwrap();
     let app_state = AppState { db, searcher };
 
@@ -30,7 +39,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/", get(search))
-        .route("/case/:id", get(case))
+        .route("/case/{id}", get(case))
         .route("/style.css", get(style))
         .route("/logo.png", get(logo))
         .layer(middleware_stack)

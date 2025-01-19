@@ -5,6 +5,7 @@ use axum::{
     http::{self, header, Response, StatusCode},
     response::IntoResponse,
 };
+use bincode::config::standard;
 use indexmap::IndexSet;
 use serde::Deserialize;
 use tantivy::{
@@ -24,7 +25,7 @@ pub struct CasePage {
 
 pub async fn case(State(state): State<AppState>, Path(id): Path<u32>) -> impl IntoResponse {
     if let Some(v) = state.db.get(id.to_be_bytes()).unwrap() {
-        let case: Case = bincode::deserialize(&v).unwrap();
+        let (case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
         let case = CasePage { case };
         into_response(&case)
     } else {
@@ -93,7 +94,7 @@ pub async fn search(
     let mut cases = Vec::with_capacity(ids.len());
     for id in ids {
         if let Some(v) = state.db.get(id.to_be_bytes()).unwrap() {
-            let mut case: Case = bincode::deserialize(&v).unwrap();
+            let (mut case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
             case.full_text = case.full_text.replace("<p>", " ").replace("</p>", " ");
             cases.push((id, case));
         }
@@ -124,7 +125,7 @@ pub async fn search(
         for (id, case) in &cases {
             wtr.write_record([
                 &id.to_string(),
-                &case.url,
+                &case.doc_id,
                 &case.case_id,
                 &case.case_name,
                 &case.court,
