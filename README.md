@@ -7,8 +7,6 @@
 > [!CAUTION]
 > 需要磁盘空间 320G 以上，可能需要数小时的时间
 
-> [!WARNING]
-> 在 Linux 平台，如果出现 `IO error: ……Too many open files`，可以使用`ulimit -n 10000`命令提高文件描述符上限。
 
 ### 0. 下载程序并创建配置文件
 
@@ -18,7 +16,7 @@
 
 ```bash
 ## 安装 rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+https://www.rust-lang.org/tools/install
 
 ## clone 本仓库
 git clone https://github.com/cncases/cases.git
@@ -35,9 +33,9 @@ cargo build -r
 
 原始数据来源于[马克数据网](https://www.macrodatas.cn/article/1147471898)，文书数量超过8500万，约102G。下载后**不要**解压子文件，将文件路径填写到 `config.toml` 中的 `raw_data_path` 变量中；
 
-### 2. 将数据加载到 rocksdb 数据库中
+### 2. 将数据加载到数据库中
 
-运行 `convert config.toml` 程序。此过程会将原始数据放入 rocksdb 数据库中，数据库文件路径为 `config.toml` 中的 `db` 变量；转换后的数据大小约为 200G，转换可能会花费数小时的时间；如果中途中断，再次运行会从中断处继续。
+运行 `convert config.toml` 程序。此过程会将原始数据放入数据库中，数据库文件路径为 `config.toml` 中的 `db` 变量；转换后的数据大小约为 200G，转换可能会花费数小时的时间；如果中途中断，再次运行会从中断处继续。
 
 ### 3. 创建索引
 运行 `index config.toml` 程序会将数据库中的数据创建索引，索引文件路径为 `config.toml` 中的 `index_path` 变量；如果中途中断，需要删除 `index_path` 中的文件，重新运行 `index` 程序；默认情况下，不会索引案件内容，索引大小约为 15.5G，可能会花费数小时的时间。如果需要索引案件内容，需要将index.toml中的 `index_with_full_text` 设置为 `true`，但是这会使索引文件增加到150G左右，索引时间也会增加到十几个小时。
