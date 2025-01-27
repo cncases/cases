@@ -23,7 +23,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 zip = { version = "2.2.0", default-features = false, features = ["deflate"] }
 
 [dev-dependencies]
-jieba-rs = "0.7.1"
+jieba-rs = "0.7.2"
 
 [profile.release]
 lto = "fat"
