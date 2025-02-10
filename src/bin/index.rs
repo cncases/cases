@@ -1,13 +1,17 @@
-use std::{fs, path::Path};
+use std::path::Path;
 
-use cases::{Case, Tan, CONFIG};
+use bincode::config::standard;
+use cases::{kv_sep_partition_option, remove_html_tags, Case, Tan, CONFIG};
+use fjall::Config;
 use tantivy::TantivyDocument;
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 fn main() {
     tracing_subscriber::registry()
-        .with(tracing_subscriber::EnvFilter::new("info,tantivy=warn"))
+        .with(tracing_subscriber::EnvFilter::new(
+            "info,tantivy=warn,html5ever=error",
+        ))
         .with(tracing_subscriber::fmt::layer())
         .init();
 
@@ -36,88 +40,70 @@ fn main() {
     let mut writer = index.writer(50 * 1024 * 1024).unwrap();
 
     let time = std::time::Instant::now();
-    let mut id: u32 = 0;
 
-    let path = CONFIG.raw_data_path.as_ref().unwrap();
-    for subdir in fs::read_dir(path).unwrap() {
-        let subdir = subdir.unwrap();
-        let subdir_path = subdir.path().to_str().unwrap().to_string();
-        if subdir_path.ends_with(".zip") {
-            info!("unzipping {}", subdir_path);
-            let file = fs::File::open(&subdir_path).unwrap();
-            let mut archive = zip::ZipArchive::new(file).unwrap();
+    let keyspace_new = Config::new(&CONFIG.db)
+        .max_write_buffer_size(256_000_000)
+        .open()
+        .unwrap();
 
-            for i in 0..archive.len() {
-                let file = archive.by_index(i).unwrap();
-                let raw_name = file.name();
-                if raw_name.ends_with(".csv") {
-                    let mut rdr = csv::Reader::from_reader(file);
-                    for result in rdr.deserialize() {
-                        id += 1;
-                        let mut case: Case = result.unwrap();
-                        if CONFIG.index_with_full_text {
-                            case.full_text = case.full_text.split_whitespace().fold(
-                                String::new(),
-                                |mut acc, x| {
-                                    acc.push_str("<p>");
-                                    acc.push_str(x);
-                                    acc.push_str("</p>");
-                                    acc
-                                },
-                            );
-                        }
+    let cases_new = keyspace_new
+        .open_partition("cases", kv_sep_partition_option())
+        .unwrap();
 
-                        let mut doc = TantivyDocument::default();
-                        doc.add_text(id_field, id);
-                        if !case.case_id.is_empty() {
-                            doc.add_text(case_id, &case.case_id);
-                        }
-                        if !case.case_name.is_empty() {
-                            doc.add_text(case_name, &case.case_name);
-                        }
-                        if !case.court.is_empty() {
-                            doc.add_text(court, &case.court);
-                        }
-                        if !case.region.is_empty() {
-                            doc.add_text(region, &case.region);
-                        }
-                        if !case.case_type.is_empty() {
-                            doc.add_text(case_type, &case.case_type);
-                        }
-                        if !case.procedure.is_empty() {
-                            doc.add_text(procedure, &case.procedure);
-                        }
-                        if !case.judgment_date.is_empty() {
-                            doc.add_text(judgment_date, &case.judgment_date);
-                        }
-                        if !case.public_date.is_empty() {
-                            doc.add_text(public_date, &case.public_date);
-                        }
-                        if !case.parties.is_empty() {
-                            doc.add_text(parties, &case.parties);
-                        }
-                        if !case.cause.is_empty() {
-                            doc.add_text(cause, &case.cause);
-                        }
-                        if !case.legal_basis.is_empty() {
-                            doc.add_text(legal_basis, &case.legal_basis);
-                        }
-                        if CONFIG.index_with_full_text && !case.full_text.is_empty() {
-                            doc.add_text(full_text, &case.full_text);
-                        }
-                        writer.add_document(doc).unwrap();
+    for i in cases_new.iter() {
+        let (k, v) = i.unwrap();
+        let id = u32::from_be_bytes(k[..].try_into().unwrap());
+        let (mut case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
 
-                        if id % 1000 == 0 {
-                            writer.commit().unwrap();
-                            info!("{} done, {}", id, time.elapsed().as_secs());
-                        }
-                    }
-                }
-            }
+        if CONFIG.index_with_full_text {
+            case.full_text = remove_html_tags(&case.full_text);
+        }
 
+        let mut doc = TantivyDocument::default();
+        doc.add_text(id_field, id);
+        if !case.case_id.is_empty() {
+            doc.add_text(case_id, &case.case_id);
+        }
+        if !case.case_name.is_empty() {
+            doc.add_text(case_name, &case.case_name);
+        }
+        if !case.court.is_empty() {
+            doc.add_text(court, &case.court);
+        }
+        if !case.region.is_empty() {
+            doc.add_text(region, &case.region);
+        }
+        if !case.case_type.is_empty() {
+            doc.add_text(case_type, &case.case_type);
+        }
+        if !case.procedure.is_empty() {
+            doc.add_text(procedure, &case.procedure);
+        }
+        if !case.judgment_date.is_empty() {
+            doc.add_text(judgment_date, &case.judgment_date);
+        }
+        if !case.public_date.is_empty() {
+            doc.add_text(public_date, &case.public_date);
+        }
+        if !case.parties.is_empty() {
+            doc.add_text(parties, &case.parties);
+        }
+        if !case.cause.is_empty() {
+            doc.add_text(cause, &case.cause);
+        }
+        if !case.legal_basis.is_empty() {
+            doc.add_text(legal_basis, &case.legal_basis);
+        }
+        if CONFIG.index_with_full_text && !case.full_text.is_empty() {
+            doc.add_text(full_text, &case.full_text);
+        }
+        writer.add_document(doc).unwrap();
+
+        if id % 10000 == 0 {
             writer.commit().unwrap();
-
-            info!("done {}", subdir_path);
+            info!("{} done, {}", id, time.elapsed().as_secs());
         }
     }
+
+    writer.commit().unwrap();
 }

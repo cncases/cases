@@ -82,25 +82,27 @@ impl Tan {
         let procedure = schema.get_field("procedure")?;
         let judgment_date = schema.get_field("judgment_date")?;
         let public_date = schema.get_field("public_date")?;
-        // let full_text = schema.get_field("full_text")?;
+        let full_text = schema.get_field("full_text")?;
 
         let index = Self::index()?;
-        let mut query_parser = QueryParser::for_index(
-            &index,
-            vec![
-                case_name,
-                court,
-                region,
-                case_type,
-                cause,
-                legal_basis,
-                parties,
-                procedure,
-                judgment_date,
-                public_date,
-                // full_text,
-            ],
-        );
+        let mut default_fields = vec![
+            case_name,
+            court,
+            region,
+            case_type,
+            cause,
+            legal_basis,
+            parties,
+            procedure,
+            judgment_date,
+            public_date,
+        ];
+
+        if CONFIG.index_with_full_text {
+            default_fields.push(full_text);
+        }
+
+        let mut query_parser = QueryParser::for_index(&index, default_fields);
 
         query_parser.set_conjunction_by_default();
         query_parser.set_field_boost(case_name, 3.);

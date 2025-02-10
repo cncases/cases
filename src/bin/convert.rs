@@ -1,6 +1,6 @@
 use bincode::config::standard;
-use cases::{Case, CONFIG};
-use fjall::{Config, KvSeparationOptions, PartitionCreateOptions};
+use cases::{kv_sep_partition_option, Case, CONFIG};
+use fjall::Config;
 use std::fs;
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt as _, util::SubscriberInitExt};
@@ -22,21 +22,8 @@ fn convert(raw_path: &str, db_path: &str) {
         .open()
         .unwrap();
     let db = keyspace
-        .open_partition(
-            "cases",
-            PartitionCreateOptions::default()
-                .max_memtable_size(128_000_000)
-                .with_kv_separation(
-                    KvSeparationOptions::default()
-                        .separation_threshold(750)
-                        .file_target_size(256_000_000),
-                ),
-        )
+        .open_partition("cases", kv_sep_partition_option())
         .unwrap();
-    let doc_ids = keyspace
-        .open_partition("doc_ids", PartitionCreateOptions::default())
-        .unwrap();
-    let mut no_doc_id = 0;
 
     for subdir in fs::read_dir(raw_path).unwrap() {
         let subdir = subdir.unwrap();
@@ -90,14 +77,6 @@ fn convert(raw_path: &str, db_path: &str) {
                                     (*id).to_be_bytes(),
                                     bincode::encode_to_vec(case, standard()).unwrap(),
                                 );
-                                let has_full_text = case.full_text.is_empty() as u32;
-                                if !case.doc_id.is_empty() {
-                                    let value =
-                                        [(*id).to_be_bytes(), has_full_text.to_be_bytes()].concat();
-                                    batch.insert(&doc_ids, &case.doc_id, value);
-                                } else {
-                                    no_doc_id += 1;
-                                }
                             }
                             batch.commit().unwrap();
                             ft.clear();
@@ -119,17 +98,10 @@ fn convert(raw_path: &str, db_path: &str) {
                 (*id).to_be_bytes(),
                 bincode::encode_to_vec(case, standard()).unwrap(),
             );
-            let has_full_text = case.full_text.is_empty() as u32;
-            if !case.doc_id.is_empty() {
-                let value = [(*id).to_be_bytes(), has_full_text.to_be_bytes()].concat();
-                batch.insert(&doc_ids, &case.doc_id, value);
-            } else {
-                no_doc_id += 1;
-            }
         }
         batch.commit().unwrap();
         ft.clear();
     }
 
-    info!("Done, no url counts {}", no_doc_id);
+    info!("Done");
 }

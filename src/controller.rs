@@ -15,7 +15,7 @@ use tantivy::{
 };
 use tracing::info;
 
-use crate::{AppState, Case, CONFIG};
+use crate::{remove_html_tags, AppState, Case};
 
 #[derive(Template)]
 #[template(path = "case.html", escape = "none")]
@@ -47,9 +47,8 @@ pub struct SearchPage {
     search: String,
     offset: usize,
     total: usize,
-    cases: Vec<(u32, Case)>,
+    cases: Vec<(u32, String, Case)>,
     search_type: String,
-    enable_full_text: bool,
 }
 
 pub async fn search(
@@ -67,7 +66,6 @@ pub async fn search(
         let query = match input.search_type.as_deref() {
             Some("legal_basis") => format!("legal_basis:{}", search),
             Some("cause") => format!("cause:{}", search),
-            Some("full_text") => format!("full_text:{}", search),
             _ => search.clone(),
         };
         let (query, _) = state.searcher.query_parser.parse_query_lenient(&query);
@@ -94,9 +92,12 @@ pub async fn search(
     let mut cases = Vec::with_capacity(ids.len());
     for id in ids {
         if let Some(v) = state.db.get(id.to_be_bytes()).unwrap() {
-            let (mut case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
-            case.full_text = case.full_text.replace("<p>", " ").replace("</p>", " ");
-            cases.push((id, case));
+            let (case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
+            let preview = remove_html_tags(&case.full_text)
+                .chars()
+                .take(240)
+                .collect();
+            cases.push((id, preview, case));
         }
     }
 
@@ -122,7 +123,7 @@ pub async fn search(
             "full_text",
         ])
         .unwrap();
-        for (id, case) in &cases {
+        for (id, _, case) in &cases {
             wtr.write_record([
                 &id.to_string(),
                 &case.doc_id,
@@ -160,7 +161,6 @@ pub async fn search(
         cases,
         total,
         search_type,
-        enable_full_text: CONFIG.index_with_full_text,
     };
 
     into_response(&body)

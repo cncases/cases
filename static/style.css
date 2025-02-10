@@ -171,6 +171,25 @@ body {
     text-decoration: none;
 }
 
+.full_text {
+    line-height: 25pt; 
+    text-indent: 30pt; 
+    margin: 0.5pt 0cm;
+    font-family: 宋体; 
+    font-size: 15pt;
+    text-align: justify;
+
+    .c_right {
+        text-align: right;
+    }
+}
+
+.full_text > div:not(.c_right):nth-child(-n+3) {
+    text-align: center; 
+    font-family: 黑体; 
+    font-size: 18pt;
+}
+
 footer{
     margin-left: 150px;
     border-top: 2px solid   #eef;
