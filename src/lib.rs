@@ -3,7 +3,7 @@ pub use config::CONFIG;
 pub use controller::{case, logo, search, style};
 use fjall::{KvSeparationOptions, PartitionCreateOptions, PartitionHandle};
 use scraper::Html;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tantivy::Searcher;
 pub use tantivy::Tan;
@@ -28,7 +28,7 @@ pub fn kv_sep_partition_option() -> PartitionCreateOptions {
         )
 }
 
-#[derive(Debug, Encode, Decode, Deserialize)]
+#[derive(Debug, Encode, Decode, Serialize, Deserialize)]
 pub struct Case {
     #[serde(rename(deserialize = "原始链接"))]
     pub doc_id: String,
