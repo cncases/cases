@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 askama = { version = "0.12", default-features = false }
-axum = { version = "0.8.1", features = ["http2", "query", "tokio", "http1"], default-features = false }
+axum = { version = "0.8.1", features = ["http2", "query", "tokio", "http1", "json"], default-features = false }
 basic-toml = "*"
 bincode = "2.0.0-rc.3"
 csv = "1"
