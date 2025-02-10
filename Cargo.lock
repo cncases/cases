@@ -282,7 +282,7 @@ checksum = "b9f101f5d5ac7c27fa7e664bbdc2697b2627f24c701e1309564840c67554dbcc"
 
 [[package]]
 name = "cases"
-version = "0.0.8"
+version = "0.0.9"
 dependencies = [
  "askama",
  "axum",
