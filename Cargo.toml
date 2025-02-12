@@ -9,7 +9,7 @@ axum = { version = "0.8.1", features = ["http2", "query", "tokio", "http1", "jso
 basic-toml = "*"
 bincode = "2.0.0-rc.3"
 csv = "1"
-fjall = { version = "2.6.2", default-features = false, features = [ "single_writer_tx", "miniz"] }
+fjall = { version = "2.6.3", default-features = false, features = [ "single_writer_tx", "miniz"] }
 indexmap = "2"
 scraper = "0.22.0"
 serde = { version = "1", features = ["derive"] }
@@ -24,7 +24,10 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 zip = { version = "2.2.0", default-features = false, features = ["deflate"] }
 
 [dev-dependencies]
+arrow = { version = "54.1.0", default-features = false }
+clickhouse = { version = "0.13.1" }
 jieba-rs = "0.7.1"
+parquet = { version = "54.1.0", default-features = false, features = [ "arrow", "lz4"] }
 
 [profile.release]
 lto = "fat"

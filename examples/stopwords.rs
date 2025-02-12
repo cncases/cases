@@ -1,3 +1,7 @@
+/// generate stop words
+///
+/// cargo build -r --example stopwords
+/// ./target/release/examples/stopwords
 use jieba_rs::Jieba;
 use tracing::info;
 
