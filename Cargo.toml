@@ -24,7 +24,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 zip = { version = "2.2.0", default-features = false, features = ["deflate"] }
 
 [dev-dependencies]
-arrow = { version = "54.1.0", default-features = false }
+arrow = { version = "54.2.0", default-features = false }
 clickhouse = { version = "0.13.1" }
 jieba-rs = "0.7.1"
 parquet = { version = "54.1.0", default-features = false, features = [ "arrow", "lz4"] }
