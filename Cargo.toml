@@ -9,7 +9,7 @@ axum = { version = "0.8.1", features = ["http2", "query", "tokio", "http1", "jso
 basic-toml = "*"
 bincode = "2.0.0-rc.3"
 csv = "1"
-fjall = { version = "2.6.3", default-features = false, features = [ "single_writer_tx", "miniz"] }
+fjall = { version = "2.6.5", default-features = false, features = [ "single_writer_tx", "miniz"] }
 indexmap = "2"
 scraper = "0.22.0"
 serde = { version = "1", features = ["derive"] }
