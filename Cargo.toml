@@ -7,7 +7,7 @@ edition = "2021"
 askama = { version = "0.12", default-features = false }
 axum = { version = "0.8.1", features = ["http2", "query", "tokio", "http1", "json"], default-features = false }
 basic-toml = "*"
-bincode = "2.0.0-rc.3"
+bincode = "2.0.0"
 csv = "1"
 fjall = { version = "2.6.3", default-features = false, features = [ "single_writer_tx", "miniz"] }
 indexmap = "2"
@@ -21,13 +21,13 @@ tower = "0.5.2"
 tower-http = { version = "0.6.2", features = ["compression-zstd", "timeout"] }
 tracing = { version = "0.1", features = ["release_max_level_info", "max_level_info"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-zip = { version = "2.2.0", default-features = false, features = ["deflate"] }
+zip = { version = "2.2.3", default-features = false, features = ["deflate"] }
 
 [dev-dependencies]
-arrow = { version = "54.1.0", default-features = false }
+arrow = { version = "54.2.1", default-features = false }
 clickhouse = { version = "0.13.1" }
 jieba-rs = "0.7.1"
-parquet = { version = "54.1.0", default-features = false, features = [ "arrow", "lz4"] }
+parquet = { version = "54.2.1", default-features = false, features = [ "arrow", "lz4"] }
 
 [profile.release]
 lto = "fat"

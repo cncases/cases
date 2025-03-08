@@ -24,6 +24,7 @@ pub struct CasePage {
 }
 
 pub async fn case(State(state): State<AppState>, Path(id): Path<u32>) -> impl IntoResponse {
+    info!("id: {}", id);
     if let Some(v) = state.db.get(id.to_be_bytes()).unwrap() {
         let (case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
         let case = CasePage { case };
