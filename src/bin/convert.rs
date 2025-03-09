@@ -5,6 +5,10 @@ use std::fs;
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt as _, util::SubscriberInitExt};
 
+#[cfg(not(target_os = "windows"))]
+#[global_allocator]
+static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
+
 fn main() {
     tracing_subscriber::registry()
         .with(tracing_subscriber::EnvFilter::new("info,fjall=warn"))

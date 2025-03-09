@@ -72,6 +72,7 @@ impl Tan {
         let schema = Self::schema();
 
         let id = schema.get_field("id")?;
+        let case_id = schema.get_field("case_id")?;
         let case_name = schema.get_field("case_name")?;
         let court = schema.get_field("court")?;
         let region = schema.get_field("region")?;
@@ -86,6 +87,7 @@ impl Tan {
 
         let index = Self::index()?;
         let mut default_fields = vec![
+            case_id,
             case_name,
             court,
             region,
@@ -105,6 +107,7 @@ impl Tan {
         let mut query_parser = QueryParser::for_index(&index, default_fields);
 
         query_parser.set_conjunction_by_default();
+        query_parser.set_field_boost(case_id, 9.);
         query_parser.set_field_boost(case_name, 3.);
 
         let reader = index

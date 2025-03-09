@@ -1,6 +1,6 @@
 [package]
 name = "cases"
-version = "0.0.9"
+version = "0.1.0"
 edition = "2021"
 
 [dependencies]
@@ -9,7 +9,7 @@ axum = { version = "0.8.1", features = ["http2", "query", "tokio", "http1", "jso
 basic-toml = "*"
 bincode = "2.0.0"
 csv = "1"
-fjall = { version = "2.6.7", default-features = false, features = [ "single_writer_tx", "miniz"] }
+fjall = { version = "2.6.3", default-features = false, features = [ "single_writer_tx", "miniz"] }
 indexmap = "2"
 scraper = "0.22.0"
 serde = { version = "1", features = ["derive"] }
@@ -22,6 +22,9 @@ tower-http = { version = "0.6.2", features = ["compression-zstd", "timeout"] }
 tracing = { version = "0.1", features = ["release_max_level_info", "max_level_info"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 zip = { version = "2.2.3", default-features = false, features = ["deflate"] }
+
+[target.'cfg(not(target_os = "windows"))'.dependencies]
+tikv-jemallocator = "0.6"
 
 [dev-dependencies]
 arrow = { version = "54.2.1", default-features = false }
