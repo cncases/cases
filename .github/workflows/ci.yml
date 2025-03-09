@@ -1,49 +1,51 @@
 name: CHECK
 
 on:
-  pull_request:
-    branches:
-      - '**'
-      
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - "**"
+
 jobs:
-  cargo:
-    name: Cargo
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      security-events: write
+    cargo:
+        name: Cargo
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            security-events: write
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: stable
-          components: clippy, rustfmt
-      
-      - name: Setup cache
-        uses: Swatinem/rust-cache@v2
+            - name: Install Rust toolchain
+              uses: dtolnay/rust-toolchain@master
+              with:
+                  toolchain: stable
+                  components: clippy, rustfmt
 
-      - name: Cargo test
-        run: cargo test
-      
-      - name: Cargo fmt
-        run: cargo fmt -- --check
+            - name: Setup cache
+              uses: Swatinem/rust-cache@v2
 
-      - name: Cargo clippy
-        run: cargo clippy --all-targets --all-features --message-format=json > clippy_result.json
-        continue-on-error: true
-      
-      - name: Install clippy-sarif sarif-fmt (require cargo)
-        run: |
-          cargo install clippy-sarif sarif-fmt
-          cat clippy_result.json | clippy-sarif | tee rust-clippy-results.sarif | sarif-fmt
+            - name: Cargo test
+              run: cargo test
 
-      - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: rust-clippy-results.sarif
-          wait-for-processing: true
-     
+            - name: Cargo fmt
+              run: cargo fmt -- --check
+
+            - name: Cargo clippy
+              run: cargo clippy --all-targets --all-features --message-format=json > clippy_result.json
+              continue-on-error: true
+
+            - name: Install clippy-sarif sarif-fmt (require cargo)
+              run: |
+                  cargo install clippy-sarif sarif-fmt
+                  cat clippy_result.json | clippy-sarif | tee rust-clippy-results.sarif | sarif-fmt
+
+            - name: Upload analysis results to GitHub
+              uses: github/codeql-action/upload-sarif@v3
+              with:
+                  sarif_file: rust-clippy-results.sarif
+                  wait-for-processing: true
