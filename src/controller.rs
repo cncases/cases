@@ -2,20 +2,20 @@ use askama::Template;
 use axum::{
     body::Body,
     extract::{Path, Query, State},
-    http::{self, header, Response, StatusCode},
+    http::{self, Response, StatusCode, header},
     response::IntoResponse,
 };
 use bincode::config::standard;
 use indexmap::IndexSet;
 use serde::Deserialize;
 use tantivy::{
+    DocAddress, Score, TantivyDocument,
     collector::{Count, TopDocs},
     schema::Value,
-    DocAddress, Score, TantivyDocument,
 };
 use tracing::info;
 
-use crate::{remove_html_tags, AppState, Case};
+use crate::{AppState, Case, remove_html_tags};
 
 #[derive(Template)]
 #[template(path = "case.html", escape = "none")]

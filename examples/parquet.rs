@@ -9,7 +9,7 @@ use arrow::{
     datatypes::{DataType, Field, Schema},
 };
 use bincode::config::standard;
-use cases::{kv_sep_partition_option, Case, CONFIG};
+use cases::{CONFIG, Case, kv_sep_partition_option};
 use fjall::Config;
 use parquet::{arrow::ArrowWriter, basic::Compression, file::properties::WriterProperties};
 

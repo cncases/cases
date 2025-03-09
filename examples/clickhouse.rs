@@ -28,7 +28,7 @@
 ///     )
 /// ```
 use bincode::config::standard;
-use cases::{kv_sep_partition_option, Case, CONFIG};
+use cases::{CONFIG, Case, kv_sep_partition_option};
 use clickhouse::{Client, Row};
 use fjall::Config;
 use serde::{Deserialize, Serialize};

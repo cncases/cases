@@ -5,7 +5,7 @@
 use jieba_rs::Jieba;
 use tracing::info;
 
-use cases::{Case, CONFIG};
+use cases::{CONFIG, Case};
 use std::{
     collections::{HashMap, HashSet},
     fs::{self, read_to_string},

@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use bincode::config::standard;
-use cases::{kv_sep_partition_option, remove_html_tags, Case, Tan, CONFIG};
+use cases::{CONFIG, Case, Tan, kv_sep_partition_option, remove_html_tags};
 use fjall::Config;
 use tantivy::TantivyDocument;
 use tracing::info;

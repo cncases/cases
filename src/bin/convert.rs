@@ -1,5 +1,5 @@
 use bincode::config::standard;
-use cases::{kv_sep_partition_option, Case, CONFIG};
+use cases::{CONFIG, Case, kv_sep_partition_option};
 use fjall::Config;
 use std::fs;
 use tracing::info;

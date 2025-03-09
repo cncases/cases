@@ -1,5 +1,5 @@
-use axum::{routing::get, Router};
-use cases::{case, kv_sep_partition_option, logo, search, style, AppState, Tan, CONFIG};
+use axum::{Router, routing::get};
+use cases::{AppState, CONFIG, Tan, case, kv_sep_partition_option, logo, search, style};
 use fjall::Config;
 use std::{net::SocketAddr, sync::Arc, time::Duration};
 use tokio::net::TcpListener;
