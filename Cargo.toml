@@ -12,7 +12,7 @@ bincode = "2.0.0"
 csv = "1"
 fjall = { version = "2.6.3", default-features = false, features = [ "single_writer_tx", "miniz"] }
 indexmap = "2"
-scraper = "0.22.0"
+scraper = "0.23.1"
 serde = { version = "1", features = ["derive"] }
 stop-words = "0.8.1"
 tantivy = "0.22.0"
