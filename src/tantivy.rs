@@ -1,13 +1,13 @@
 use std::collections::HashSet;
 
 use tantivy::{
+    IndexReader, ReloadPolicy,
     directory::MmapDirectory,
     query::QueryParser,
     schema::{
-        Field, IndexRecordOption, Schema, SchemaBuilder, TextFieldIndexing, TextOptions, STORED,
+        Field, IndexRecordOption, STORED, Schema, SchemaBuilder, TextFieldIndexing, TextOptions,
     },
     tokenizer::{RemoveLongFilter, StopWordFilter, TextAnalyzer},
-    IndexReader, ReloadPolicy,
 };
 
 use crate::CONFIG;
