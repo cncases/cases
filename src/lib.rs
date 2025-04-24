@@ -38,8 +38,8 @@ pub struct Case {
     pub case_name: String,
     #[serde(rename(deserialize = "法院"))]
     pub court: String,
-    #[serde(rename(deserialize = "所属地区"))]
-    pub region: String,
+    // #[serde(rename(deserialize = "所属地区"))]
+    // pub region: String,
     #[serde(rename(deserialize = "案件类型"))]
     pub case_type: String,
     // #[serde(rename(deserialize = "案件类型编码"))]

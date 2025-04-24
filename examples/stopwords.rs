@@ -63,7 +63,6 @@ fn unzip(path: &str) {
                             case.case_id,
                             case.case_name,
                             case.court,
-                            case.region,
                             case.case_type,
                             case.procedure,
                             case.judgment_date,

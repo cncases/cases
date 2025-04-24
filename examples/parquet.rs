@@ -27,7 +27,6 @@ fn main() {
         Field::new("case_id", DataType::Utf8, false),
         Field::new("case_name", DataType::Utf8, false),
         Field::new("court", DataType::Utf8, false),
-        Field::new("region", DataType::Utf8, false),
         Field::new("procedure", DataType::Utf8, false),
         Field::new("judgment_date", DataType::Utf8, false),
         Field::new("public_date", DataType::Utf8, false),
@@ -42,7 +41,6 @@ fn main() {
     let mut case_id_vec = Vec::with_capacity(ROW_SIZE);
     let mut case_name_vec = Vec::with_capacity(ROW_SIZE);
     let mut court_vec = Vec::with_capacity(ROW_SIZE);
-    let mut region_vec = Vec::with_capacity(ROW_SIZE);
     let mut procedure_vec = Vec::with_capacity(ROW_SIZE);
     let mut judgment_date_vec = Vec::with_capacity(ROW_SIZE);
     let mut public_date_vec = Vec::with_capacity(ROW_SIZE);
@@ -67,7 +65,6 @@ fn main() {
         case_id_vec.push(case.case_id);
         case_name_vec.push(case.case_name);
         court_vec.push(case.court);
-        region_vec.push(case.region);
         procedure_vec.push(case.procedure);
         judgment_date_vec.push(case.judgment_date);
         public_date_vec.push(case.public_date);
@@ -83,7 +80,6 @@ fn main() {
             let case_id_array = StringArray::from(case_id_vec.clone());
             let case_name_array = StringArray::from(case_name_vec.clone());
             let court_array = StringArray::from(court_vec.clone());
-            let region_array = StringArray::from(region_vec.clone());
             let procedure_array = StringArray::from(procedure_vec.clone());
             let judgment_date_array = StringArray::from(judgment_date_vec.clone());
             let public_date_array = StringArray::from(public_date_vec.clone());
@@ -100,7 +96,6 @@ fn main() {
                     Arc::new(case_id_array) as ArrayRef,
                     Arc::new(case_name_array) as ArrayRef,
                     Arc::new(court_array) as ArrayRef,
-                    Arc::new(region_array) as ArrayRef,
                     Arc::new(procedure_array) as ArrayRef,
                     Arc::new(judgment_date_array) as ArrayRef,
                     Arc::new(public_date_array) as ArrayRef,
@@ -125,7 +120,6 @@ fn main() {
             case_id_vec.clear();
             case_name_vec.clear();
             court_vec.clear();
-            region_vec.clear();
             procedure_vec.clear();
             judgment_date_vec.clear();
             public_date_vec.clear();
@@ -143,7 +137,6 @@ fn main() {
         let case_id_array = StringArray::from(case_id_vec);
         let case_name_array = StringArray::from(case_name_vec);
         let court_array = StringArray::from(court_vec);
-        let region_array = StringArray::from(region_vec);
         let procedure_array = StringArray::from(procedure_vec);
         let judgment_date_array = StringArray::from(judgment_date_vec);
         let public_date_array = StringArray::from(public_date_vec);
@@ -160,7 +153,6 @@ fn main() {
                 Arc::new(case_id_array) as ArrayRef,
                 Arc::new(case_name_array) as ArrayRef,
                 Arc::new(court_array) as ArrayRef,
-                Arc::new(region_array) as ArrayRef,
                 Arc::new(procedure_array) as ArrayRef,
                 Arc::new(judgment_date_array) as ArrayRef,
                 Arc::new(public_date_array) as ArrayRef,

@@ -1,18 +1,27 @@
 [package]
 name = "cases"
 version = "0.1.0"
-edition = "2024"
-rust-version = "1.85.0"
+edition = "2021"
+# rust-version = "1.85.0"
 
 [dependencies]
-askama = { version = "0.12", default-features = false }
-axum = { version = "0.8.1", features = ["http2", "query", "tokio", "http1", "json"], default-features = false }
+askama = { version = "0.14" }
+axum = { version = "0.8.3", features = [
+    "http2",
+    "query",
+    "tokio",
+    "http1",
+    "json",
+], default-features = false }
 basic-toml = "*"
-bincode = "2.0.0"
+bincode = "2.0.1"
 csv = "1"
-fjall = { version = "2.6.3", default-features = false, features = [ "single_writer_tx", "miniz"] }
+fjall = { version = "2.9.0", default-features = false, features = [
+    "single_writer_tx",
+    "miniz",
+] }
 indexmap = "2"
-scraper = "0.22.0"
+scraper = "0.23.1"
 serde = { version = "1", features = ["derive"] }
 stop-words = "0.8.1"
 tantivy = "0.22.0"
@@ -20,18 +29,24 @@ tantivy-jieba = "0.11.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tower = "0.5.2"
 tower-http = { version = "0.6.2", features = ["compression-zstd", "timeout"] }
-tracing = { version = "0.1", features = ["release_max_level_info", "max_level_info"] }
+tracing = { version = "0.1", features = [
+    "release_max_level_info",
+    "max_level_info",
+] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-zip = { version = "2.2.3", default-features = false, features = ["deflate"] }
+zip = { version = "2.6.1", default-features = false, features = ["deflate"] }
 
 [target.'cfg(not(target_os = "windows"))'.dependencies]
 tikv-jemallocator = "0.6"
 
 [dev-dependencies]
-arrow = { version = "54.2.1", default-features = false }
-clickhouse = { version = "0.13.1" }
-jieba-rs = "0.7.1"
-parquet = { version = "54.2.1", default-features = false, features = [ "arrow", "lz4"] }
+arrow = { version = "55", default-features = false }
+clickhouse = { version = "0.13.2" }
+jieba-rs = "0.7.2"
+parquet = { version = "55", default-features = false, features = [
+    "arrow",
+    "lz4",
+] }
 
 [profile.release]
 lto = "fat"

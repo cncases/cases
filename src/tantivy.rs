@@ -1,13 +1,13 @@
 use std::collections::HashSet;
 
 use tantivy::{
-    IndexReader, ReloadPolicy,
     directory::MmapDirectory,
     query::QueryParser,
     schema::{
-        Field, IndexRecordOption, STORED, Schema, SchemaBuilder, TextFieldIndexing, TextOptions,
+        Field, IndexRecordOption, Schema, SchemaBuilder, TextFieldIndexing, TextOptions, STORED,
     },
     tokenizer::{RemoveLongFilter, StopWordFilter, TextAnalyzer},
+    IndexReader, ReloadPolicy,
 };
 
 use crate::CONFIG;
@@ -59,7 +59,8 @@ impl Tan {
             .collect();
         custom_stop_words.extend(stop_words);
 
-        let tokenizer = TextAnalyzer::builder(tantivy_jieba::JiebaTokenizer {})
+        let jieba_tokenizer = tantivy_jieba::JiebaTokenizer {};
+        let tokenizer = TextAnalyzer::builder(jieba_tokenizer)
             .filter(StopWordFilter::remove(custom_stop_words))
             .filter(RemoveLongFilter::limit(40))
             .build();

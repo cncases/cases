@@ -25,7 +25,6 @@ fn main() {
     let case_id = schema.get_field("case_id").unwrap();
     let case_name = schema.get_field("case_name").unwrap();
     let court = schema.get_field("court").unwrap();
-    let region = schema.get_field("region").unwrap();
     let case_type = schema.get_field("case_type").unwrap();
     let procedure = schema.get_field("procedure").unwrap();
     let judgment_date = schema.get_field("judgment_date").unwrap();
@@ -73,9 +72,6 @@ fn main() {
         }
         if !case.court.is_empty() {
             doc.add_text(court, &case.court);
-        }
-        if !case.region.is_empty() {
-            doc.add_text(region, &case.region);
         }
         if !case.case_type.is_empty() {
             doc.add_text(case_type, &case.case_type);
