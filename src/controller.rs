@@ -2,8 +2,8 @@ use askama::Template;
 use axum::{
     body::Body,
     extract::{Path, Query, State},
-    http::{self, Response, StatusCode, header},
-    response::IntoResponse,
+    http::{Response, StatusCode, header},
+    response::{Html, IntoResponse},
 };
 use bincode::config::standard;
 use indexmap::IndexSet;
@@ -117,7 +117,6 @@ pub async fn search(
             "case_id",
             "case_name",
             "court",
-            "region",
             "case_type",
             "procedure",
             "judgment_date",
@@ -135,7 +134,6 @@ pub async fn search(
                 &case.case_id,
                 &case.case_name,
                 &case.court,
-                &case.region,
                 &case.case_type,
                 &case.procedure,
                 &case.judgment_date,
@@ -197,14 +195,7 @@ pub async fn logo() -> impl IntoResponse {
 
 fn into_response<T: Template>(t: &T) -> Response<Body> {
     match t.render() {
-        Ok(body) => {
-            let headers = [(
-                http::header::CONTENT_TYPE,
-                http::HeaderValue::from_static(T::MIME_TYPE),
-            )];
-
-            (headers, body).into_response()
-        }
+        Ok(body) => Html(body).into_response(),
         Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     }
 }
