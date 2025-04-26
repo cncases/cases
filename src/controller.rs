@@ -113,7 +113,6 @@ pub async fn search(
             "case_id",
             "case_name",
             "court",
-            "region",
             "case_type",
             "procedure",
             "judgment_date",
