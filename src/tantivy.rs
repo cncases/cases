@@ -5,7 +5,8 @@ use tantivy::{
     directory::MmapDirectory,
     query::QueryParser,
     schema::{
-        Field, IndexRecordOption, STORED, Schema, SchemaBuilder, TextFieldIndexing, TextOptions,
+        Field, IndexRecordOption, NumericOptions, STORED, Schema, SchemaBuilder, TextFieldIndexing,
+        TextOptions,
     },
     tokenizer::{RemoveLongFilter, StopWordFilter, TextAnalyzer},
 };
@@ -26,8 +27,9 @@ impl Tan {
         let text_indexing = TextFieldIndexing::default()
             .set_tokenizer("jieba")
             .set_index_option(IndexRecordOption::WithFreqsAndPositions);
+        let num_options = NumericOptions::default().set_indexed();
         let text_options_nostored = TextOptions::default().set_indexing_options(text_indexing);
-        schema_builder.add_text_field("id", STORED);
+        schema_builder.add_u64_field("id", STORED);
         schema_builder.add_text_field("case_id", text_options_nostored.clone());
         schema_builder.add_text_field("case_name", text_options_nostored.clone());
         schema_builder.add_text_field("court", text_options_nostored.clone());
@@ -35,6 +37,9 @@ impl Tan {
         schema_builder.add_text_field("case_type", text_options_nostored.clone());
         schema_builder.add_text_field("procedure", text_options_nostored.clone());
         schema_builder.add_text_field("judgment_date", text_options_nostored.clone());
+        schema_builder.add_u64_field("year", num_options.clone());
+        schema_builder.add_u64_field("month", num_options.clone());
+        schema_builder.add_u64_field("day", num_options);
         schema_builder.add_text_field("public_date", text_options_nostored.clone());
         schema_builder.add_text_field("parties", text_options_nostored.clone());
         schema_builder.add_text_field("cause", text_options_nostored.clone());
@@ -83,6 +88,9 @@ impl Tan {
         let parties = schema.get_field("parties")?;
         let procedure = schema.get_field("procedure")?;
         let judgment_date = schema.get_field("judgment_date")?;
+        let year = schema.get_field("year")?;
+        let month = schema.get_field("month")?;
+        let day = schema.get_field("day")?;
         let public_date = schema.get_field("public_date")?;
         let full_text = schema.get_field("full_text")?;
 
@@ -98,6 +106,9 @@ impl Tan {
             parties,
             procedure,
             judgment_date,
+            year,
+            month,
+            day,
             public_date,
         ];
 

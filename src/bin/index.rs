@@ -27,6 +27,9 @@ fn main() {
     let court = schema.get_field("court").unwrap();
     let case_type = schema.get_field("case_type").unwrap();
     let procedure = schema.get_field("procedure").unwrap();
+    let year = schema.get_field("year").unwrap();
+    let month = schema.get_field("month").unwrap();
+    let day = schema.get_field("day").unwrap();
     let judgment_date = schema.get_field("judgment_date").unwrap();
     let public_date = schema.get_field("public_date").unwrap();
     let parties = schema.get_field("parties").unwrap();
@@ -63,7 +66,7 @@ fn main() {
         }
 
         let mut doc = TantivyDocument::default();
-        doc.add_text(id_field, id);
+        doc.add_u64(id_field, id as u64);
         if !case.case_id.is_empty() {
             doc.add_text(case_id, &case.case_id);
         }
@@ -81,6 +84,22 @@ fn main() {
         }
         if !case.judgment_date.is_empty() {
             doc.add_text(judgment_date, &case.judgment_date);
+            let s: Vec<&str> = case.judgment_date.split("-").collect();
+            if let Some(y) = s.get(0) {
+                if let Ok(judge_year) = y.parse() {
+                    doc.add_u64(year, judge_year);
+                }
+            }
+            if let Some(m) = s.get(1) {
+                if let Ok(judge_month) = m.parse() {
+                    doc.add_u64(month, judge_month);
+                }
+            }
+            if let Some(d) = s.get(2) {
+                if let Ok(judge_day) = d.parse() {
+                    doc.add_u64(day, judge_day);
+                }
+            }
         }
         if !case.public_date.is_empty() {
             doc.add_text(public_date, &case.public_date);

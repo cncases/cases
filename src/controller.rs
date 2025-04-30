@@ -87,9 +87,9 @@ pub async fn search(
                 .unwrap()
                 .get_first(state.searcher.id)
                 .unwrap()
-                .as_str()
+                .as_u64()
             {
-                ids.insert(id.parse().unwrap());
+                ids.insert(id as u32);
             }
         }
     }
