@@ -85,7 +85,7 @@ fn main() {
         if !case.judgment_date.is_empty() {
             doc.add_text(judgment_date, &case.judgment_date);
             let s: Vec<&str> = case.judgment_date.split("-").collect();
-            if let Some(y) = s.get(0) {
+            if let Some(y) = s.first() {
                 if let Ok(judge_year) = y.parse() {
                     doc.add_u64(year, judge_year);
                 }
@@ -125,4 +125,9 @@ fn main() {
     }
 
     writer.commit().unwrap();
+    info!(
+        "Total {}, {}",
+        cases_new.approximate_len(),
+        time.elapsed().as_secs()
+    );
 }

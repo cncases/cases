@@ -6,7 +6,7 @@ rust-version = "1.85.0"
 
 [dependencies]
 askama = { version = "0.14" }
-axum = { version = "0.8.3", features = [
+axum = { version = "0.8.4", features = [
     "http2",
     "query",
     "tokio",

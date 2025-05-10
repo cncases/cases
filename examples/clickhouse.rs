@@ -15,7 +15,6 @@
 ///         `case_id` Nullable(String),
 ///         `case_name` Nullable(String),
 ///         `court` Nullable(String),
-///         `region` LowCardinality(Nullable(String)),
 ///         `case_type` LowCardinality(Nullable(String)),
 ///         `procedure` LowCardinality(Nullable(String)),
 ///         `judgment_date` LowCardinality(Nullable(String)),

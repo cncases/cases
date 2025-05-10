@@ -33,7 +33,6 @@ impl Tan {
         schema_builder.add_text_field("case_id", text_options_nostored.clone());
         schema_builder.add_text_field("case_name", text_options_nostored.clone());
         schema_builder.add_text_field("court", text_options_nostored.clone());
-        schema_builder.add_text_field("region", text_options_nostored.clone());
         schema_builder.add_text_field("case_type", text_options_nostored.clone());
         schema_builder.add_text_field("procedure", text_options_nostored.clone());
         schema_builder.add_text_field("judgment_date", text_options_nostored.clone());
@@ -81,7 +80,6 @@ impl Tan {
         let case_id = schema.get_field("case_id")?;
         let case_name = schema.get_field("case_name")?;
         let court = schema.get_field("court")?;
-        let region = schema.get_field("region")?;
         let case_type = schema.get_field("case_type")?;
         let cause = schema.get_field("cause")?;
         let legal_basis = schema.get_field("legal_basis")?;
@@ -99,7 +97,6 @@ impl Tan {
             case_id,
             case_name,
             court,
-            region,
             case_type,
             cause,
             legal_basis,
