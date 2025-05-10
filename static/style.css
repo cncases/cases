@@ -5,6 +5,10 @@ body {
     flex-direction: column;
 }
 
+#help {
+    text-decoration: none;
+}
+
 .nav {
     display: flex;
     align-items: center;
@@ -47,7 +51,7 @@ body {
 }
 
 .search-header {
-    border-bottom: 1px solid #E6E8EB;
+    border-bottom: 1px solid #e6e8eb;
 }
 
 .search-nav {
@@ -56,7 +60,7 @@ body {
     margin-top: 10px;
 }
 
-.search-nav>a>img {
+.search-nav > a > img {
     width: 120px;
     margin-top: 12px;
 }
@@ -71,7 +75,10 @@ body {
 }
 
 .search-second-nav .search-type a {
-    font-family: Google Sans, arial, sans-serif;
+    font-family:
+        Google Sans,
+        arial,
+        sans-serif;
     color: #777;
     font-size: 14px;
     text-decoration: none;
@@ -86,8 +93,8 @@ body {
 }
 
 .search-second-nav .selected {
-    border-bottom: 3px solid #1A73E8;
-    color: #1A73E8;
+    border-bottom: 3px solid #1a73e8;
+    color: #1a73e8;
 }
 
 .search-second-nav div {
@@ -172,10 +179,10 @@ body {
 }
 
 .full_text {
-    line-height: 25pt; 
-    text-indent: 30pt; 
+    line-height: 25pt;
+    text-indent: 30pt;
     margin: 0.5pt 0cm;
-    font-family: 宋体; 
+    font-family: 宋体;
     font-size: 15pt;
     text-align: justify;
 
@@ -184,18 +191,17 @@ body {
     }
 }
 
-.full_text > div:not(.c_right):nth-child(-n+3) {
-    text-align: center; 
-    font-family: 黑体; 
+.full_text > div:not(.c_right):nth-child(-n + 3) {
+    text-align: center;
+    font-family: 黑体;
     font-size: 18pt;
 }
 
-footer{
+footer {
     margin-left: 150px;
-    border-top: 2px solid   #eef;
+    border-top: 2px solid #eef;
     margin-top: auto;
 }
-
 
 @media only screen and (max-width: 600px) {
     .searchbar {
@@ -210,7 +216,7 @@ footer{
         padding-left: 0px;
     }
 
-    footer{
+    footer {
         margin-left: 0px;
     }
 

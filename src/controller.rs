@@ -63,16 +63,16 @@ pub async fn search(
     let mut ids: IndexSet<u32> = IndexSet::with_capacity(20);
     let mut total = 0;
     if !search.is_empty() {
-        if export {
-            info!("exporting: {search}, offset: {offset}, limit: {limit}");
-        } else {
-            info!("searching: {search}, offset: {offset}, limit: {limit}");
-        }
         let query = match input.search_type.as_deref() {
             Some("legal_basis") => format!("legal_basis:{}", search),
             Some("cause") => format!("cause:{}", search),
             _ => search.clone(),
         };
+        if export {
+            info!("exporting: {query}, offset: {offset}, limit: {limit}");
+        } else {
+            info!("searching: {query}, offset: {offset}, limit: {limit}");
+        }
         let (query, _) = state.searcher.query_parser.parse_query_lenient(&query);
         let searcher = state.searcher.reader.searcher();
         total = searcher.search(&query, &Count).unwrap();
@@ -191,6 +191,18 @@ pub async fn logo() -> impl IntoResponse {
     ];
 
     (headers, include_bytes!("../static/logo.png").as_slice())
+}
+
+pub async fn help() -> impl IntoResponse {
+    let headers = [
+        (header::CONTENT_TYPE, "text/plain; charset=utf-8"),
+        (
+            header::CACHE_CONTROL,
+            "public, max-age=1209600, s-maxage=86400",
+        ),
+    ];
+
+    (headers, include_bytes!("../static/help.txt").as_slice())
 }
 
 fn into_response<T: Template>(t: &T) -> Response<Body> {

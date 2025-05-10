@@ -1,0 +1,89 @@
+Tantivy 查询语法简明指南（适用于案件检索系统）
+
+可用字段一览：
+
+字段名           | 说明          | 类型
+----------------|--------------|--------
+case_id         | 案件编号      | 文本
+case_name       | 案件名称      | 文本
+court           | 法院         | 文本
+case_type       | 案件类型      | 文本
+procedure       | 审理程序      | 文本
+judgment_date   | 判决日期      | 文本
+year            | 年份         | 数字
+month           | 月份         | 数字
+day             | 日期         | 数字
+public_date     | 公开日期      | 文本
+parties         | 当事人       | 文本
+cause           | 案由         | 文本
+legal_basis     | 法律依据      | 文本
+full_text       | 全文         | 文本
+
+-----------------------------
+
+⚠️ 注意：查询语法中的所有标点符号（如冒号、引号、括号等）必须使用英文半角格式。
+
+多字段组合示例：
+
+示例 1：
+case_name:离婚 AND court:中级人民法院
+
+示例 2：
+cause:交通事故 OR procedure:二审
+
+示例 3：
+court:上海 AND -cause:合同
+
+示例 4：
+court:高级人民法院 AND (full_text:侵权 OR full_text:赔偿)
+
+示例 5：
+case_name:"抚养 纠纷" AND year:[2021 TO 2023]
+
+-----------------------------
+
+查询语法说明：
+
+1. 基本关键词搜索：
+离婚 判决
+说明：在所有默认字段中查找“离婚”或“判决”
+
+2. 指定字段搜索：
+case_name:离婚
+说明：仅匹配案件名称中包含“离婚”的文档
+
+case_name:离婚 判决
+说明：等价于 case_name:离婚 AND 判决（字段只作用于第一个词）
+
+3. 布尔逻辑组合：
+case_type:民事 AND court:上海
++court:上海 -cause:合同
+说明：使用 AND / OR 或 +（必须）/ -（排除）组合逻辑
+
+4. 精确短语查询：
+case_name:"离婚 纠纷"
+说明：匹配“离婚纠纷”连续出现的文档
+
+5. 范围查询（数字 / 日期）：
+year:[2020 TO 2023]
+说明：[] 包含边界；{} 排除边界
+
+6. 集合查询（IN）：
+court: IN [北京 上海 广州]
+说明：等价于 court:北京 OR court:上海 OR court:广州
+
+7. 加权查询（Boost）：
+case_type:刑事^2.0 OR 民事^0.5
+说明：提高包含“刑事”文档的得分
+
+-----------------------------
+
+
+更多语法详见：
+https://docs.rs/tantivy/latest/tantivy/query/struct.QueryParser.html
+
+导出功能：
+最多导出10000条，调整offset参数可获得更多结果，offset=10000，即可获得第10000~20000条结果。如：
+https://caseopen.org/?search=%E6%8B%90%E5%8D%96&offset=10000&search_type=default&export=true
+
+更多合作请发邮件至 contact@caseopen.org

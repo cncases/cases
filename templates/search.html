@@ -1,72 +1,126 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; script-src 'none'; style-src 'self'; object-src 'none'; font-src 'none'; form-action 'self'; frame-src 'none'; media-src 'none'; manifest-src 'none'; worker-src 'none';">
-    <title>裁判文书网</title>
-    <link rel="stylesheet" href="/style.css">
-</head>
-<body>
-    <header class="search-header">
-        <nav class="search-nav">
-            <a href="/"><img src="/logo.png"></a>
-            <form id="search" action="/" method="get">
-                <div class="searchbar search-searchbar">
-                    <input class="search-input" type="text" id="search" name="search" value="{{ search }}">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; img-src 'self'; script-src 'none'; style-src 'self'; object-src 'none'; font-src 'none'; form-action 'self'; frame-src 'none'; media-src 'none'; manifest-src 'none'; worker-src 'none';"
+        />
+        <title>裁判文书网</title>
+        <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+        <header class="search-header">
+            <nav class="search-nav">
+                <a href="/"><img src="/logo.png" /></a>
+                <form id="search" action="/" method="get">
+                    <div class="searchbar search-searchbar">
+                        <input
+                            class="search-input"
+                            type="text"
+                            id="search"
+                            name="search"
+                            value="{{ search }}"
+                        />
+                    </div>
+                </form>
+            </nav>
+            <nav class="search-second-nav">
+                <div class="search-type">
+                    {% match search_type.as_str() %}{% when "legal_basis" %}
+                    <a href="/?search={{search}}&search_type=default">搜索</a>
+                    <a
+                        href="/?search={{search}}&search_type=legal_basis"
+                        class="selected"
+                        >法律依据</a
+                    >
+                    <a href="/?search={{search}}&search_type=cause">案由</a>
+                    {% when "cause" %}
+                    <a href="/?search={{search}}&search_type=default">搜索</a>
+                    <a href="/?search={{search}}&search_type=legal_basis"
+                        >法律依据</a
+                    >
+                    <a
+                        href="/?search={{search}}&search_type=cause"
+                        class="selected"
+                        >案由</a
+                    >
+                    {% when "full_text" %}
+                    <a href="/?search={{search}}&search_type=default">搜索</a>
+                    <a href="/?search={{search}}&search_type=legal_basis"
+                        >法律依据</a
+                    >
+                    <a href="/?search={{search}}&search_type=cause">案由</a>
+                    {% else %}
+                    <a
+                        href="/?search={{search}}&search_type=default"
+                        class="selected"
+                        >搜索</a
+                    >
+                    <a href="/?search={{search}}&search_type=legal_basis"
+                        >法律依据</a
+                    >
+                    <a href="/?search={{search}}&search_type=cause">案由</a>
+                    {% endmatch %}
                 </div>
-            </form>
-        </nav>
-        <nav class="search-second-nav">
-            <div class="search-type">
-                {% match search_type.as_str() %}{% when "legal_basis" %}
-                <a href="/?search={{search}}&search_type=default">搜索</a>
-                <a href="/?search={{search}}&search_type=legal_basis" class="selected">法律依据</a>
-                <a href="/?search={{search}}&search_type=cause">案由</a>
-                {% when "cause" %}
-                <a href="/?search={{search}}&search_type=default">搜索</a>
-                <a href="/?search={{search}}&search_type=legal_basis">法律依据</a>
-                <a href="/?search={{search}}&search_type=cause" class="selected">案由</a>
-                {% when "full_text" %}
-                <a href="/?search={{search}}&search_type=default">搜索</a>
-                <a href="/?search={{search}}&search_type=legal_basis">法律依据</a>
-                <a href="/?search={{search}}&search_type=cause">案由</a>
-                {% else %}
-                <a href="/?search={{search}}&search_type=default" class="selected">搜索</a>
-                <a href="/?search={{search}}&search_type=legal_basis">法律依据</a>
-                <a href="/?search={{search}}&search_type=cause">案由</a>
-                
-                {% endmatch %}
-            </div>
-            <div>
-                <p>找到 {{ total }}，<a class="noline" title="最多导出10000条，调整offset参数可获得更多结果，offset=10000，即可获得第10000~20000条结果" href="/?search={{ search }}&offset={{ offset }}&search_type={{search_type}}&export=true">导出</a></p>
-            </div>
-        </nav>
-    </header>
+                <div>
+                    <p>
+                        <a
+                            href="/help.txt"
+                            target="_blank"
+                            id="help"
+                            title="查看查询语法与使用帮助"
+                            >❓帮助&nbsp;</a
+                        >
+                        找到 {{ total }}，<a
+                            class="noline"
+                            title="最多导出10000条，调整offset参数可获得更多结果，offset=10000，即可获得第10000~20000条结果"
+                            href="/?search={{ search }}&offset={{ offset }}&search_type={{search_type}}&export=true"
+                            >导出</a
+                        >
+                    </p>
+                </div>
+            </nav>
+        </header>
 
-    <main class="search-results">
-        {% for (id, preview, case) in cases %}
-        <div class="search-result-text">
-            <a class="nounderline" href="/case/{{id}}" target="_blank">
-                <h3 class="underlineonhover">{{ case.case_name }}</h3>
-            </a>
-            <p>{{ case.judgment_date }} - {{ case.case_type }} - {{ case.procedure }}</p>
-            <p>{{ preview }}</p>
-            <a class="nounderline" href="/case/{{id}}" target="_blank">{{case.case_id}} - {{ case.court }}</a>
-        </div>
-        {% endfor %}
-    </main>
+        <main class="search-results">
+            {% for (id, preview, case) in cases %}
+            <div class="search-result-text">
+                <a class="nounderline" href="/case/{{id}}" target="_blank">
+                    <h3 class="underlineonhover">{{ case.case_name }}</h3>
+                </a>
+                <p>
+                    {{ case.judgment_date }} - {{ case.case_type }} - {{
+                    case.procedure }}
+                </p>
+                <p>{{ preview }}</p>
+                <a class="nounderline" href="/case/{{id}}" target="_blank"
+                    >{{case.case_id}} - {{ case.court }}</a
+                >
+            </div>
+            {% endfor %}
+        </main>
 
-    <div class="pagination">
-        {% if cases.len() >= 20 %}
-            {% if offset >= 20 %}
-            <a href="/?search={{ search }}&offset={{ offset - 20 }}&search_type={{search_type}}">上一页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="pagination">
+            {% if cases.len() >= 20 %} {% if offset >= 20 %}
+            <a
+                href="/?search={{ search }}&offset={{ offset - 20 }}&search_type={{search_type}}"
+                >上一页</a
+            >&nbsp;&nbsp;&nbsp;&nbsp; {% endif %}
+            <a
+                href="/?search={{ search }}&offset={{ offset + 20 }}&search_type={{search_type}}"
+                >下一页</a
+            >
             {% endif %}
-        <a href="/?search={{ search }}&offset={{ offset + 20 }}&search_type={{search_type}}">下一页</a>
-        {% endif %}
-    </div>
-    <footer>
-        <p>GitHub: <a href="https://github.com/cncases/cases">https://github.com/cncases/cases</a></p>
-    </footer>
-</body>
-</html> 
+        </div>
+        <footer>
+            <p>
+                GitHub:
+                <a href="https://github.com/cncases/cases"
+                    >https://github.com/cncases/cases</a
+                >
+            </p>
+        </footer>
+    </body>
+</html>
