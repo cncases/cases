@@ -23,60 +23,26 @@
                             name="search"
                             value="{{ search }}"
                         />
+                        <button type="submit" class="search-button">🔍</button>
                     </div>
                 </form>
             </nav>
             <nav class="search-second-nav">
                 <div class="search-type">
-                    {% match search_type.as_str() %}{% when "legal_basis" %}
-                    <a href="/?search={{search}}&search_type=default">搜索</a>
                     <a
-                        href="/?search={{search}}&search_type=legal_basis"
-                        class="selected"
-                        >法律依据</a
+                        href="/help.txt"
+                        target="_blank"
+                        id="help"
+                        title="查看查询语法与使用帮助"
+                        >❓帮助</a
                     >
-                    <a href="/?search={{search}}&search_type=cause">案由</a>
-                    {% when "cause" %}
-                    <a href="/?search={{search}}&search_type=default">搜索</a>
-                    <a href="/?search={{search}}&search_type=legal_basis"
-                        >法律依据</a
-                    >
-                    <a
-                        href="/?search={{search}}&search_type=cause"
-                        class="selected"
-                        >案由</a
-                    >
-                    {% when "full_text" %}
-                    <a href="/?search={{search}}&search_type=default">搜索</a>
-                    <a href="/?search={{search}}&search_type=legal_basis"
-                        >法律依据</a
-                    >
-                    <a href="/?search={{search}}&search_type=cause">案由</a>
-                    {% else %}
-                    <a
-                        href="/?search={{search}}&search_type=default"
-                        class="selected"
-                        >搜索</a
-                    >
-                    <a href="/?search={{search}}&search_type=legal_basis"
-                        >法律依据</a
-                    >
-                    <a href="/?search={{search}}&search_type=cause">案由</a>
-                    {% endmatch %}
                 </div>
                 <div>
                     <p>
-                        <a
-                            href="/help.txt"
-                            target="_blank"
-                            id="help"
-                            title="查看查询语法与使用帮助"
-                            >❓帮助&nbsp;</a
-                        >
                         找到 {{ total }}，<a
                             class="noline"
                             title="最多导出10000条，调整offset参数可获得更多结果，offset=10000，即可获得第10000~20000条结果"
-                            href="/?search={{ search }}&offset={{ offset }}&search_type={{search_type}}&export=true"
+                            href="/?search={{ search }}&offset={{ offset }}&export=true"
                             >导出</a
                         >
                     </p>
@@ -104,14 +70,9 @@
 
         <div class="pagination">
             {% if cases.len() >= 20 %} {% if offset >= 20 %}
-            <a
-                href="/?search={{ search }}&offset={{ offset - 20 }}&search_type={{search_type}}"
-                >上一页</a
+            <a href="/?search={{ search }}&offset={{ offset - 20 }}">上一页</a
             >&nbsp;&nbsp;&nbsp;&nbsp; {% endif %}
-            <a
-                href="/?search={{ search }}&offset={{ offset + 20 }}&search_type={{search_type}}"
-                >下一页</a
-            >
+            <a href="/?search={{ search }}&offset={{ offset + 20 }}">下一页</a>
             {% endif %}
         </div>
         <footer>

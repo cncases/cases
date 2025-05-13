@@ -5,10 +5,6 @@ body {
     flex-direction: column;
 }
 
-#help {
-    text-decoration: none;
-}
-
 .nav {
     display: flex;
     align-items: center;
@@ -58,6 +54,12 @@ body {
     display: flex;
     align-items: center;
     margin-top: 10px;
+    margin-left: 15px;
+}
+
+.search-button {
+    background: none;
+    border: none;
 }
 
 .search-nav > a > img {

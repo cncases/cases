@@ -38,7 +38,6 @@ pub async fn case(State(state): State<AppState>, Path(id): Path<u32>) -> impl In
 pub struct QuerySearch {
     search: Option<String>,
     offset: Option<usize>,
-    search_type: Option<String>,
     export: Option<bool>,
 }
 
@@ -49,7 +48,6 @@ pub struct SearchPage {
     offset: usize,
     total: usize,
     cases: Vec<(u32, String, Case)>,
-    search_type: String,
 }
 
 pub async fn search(
@@ -63,17 +61,12 @@ pub async fn search(
     let mut ids: IndexSet<u32> = IndexSet::with_capacity(20);
     let mut total = 0;
     if !search.is_empty() {
-        let query = match input.search_type.as_deref() {
-            Some("legal_basis") => format!("legal_basis:{}", search),
-            Some("cause") => format!("cause:{}", search),
-            _ => search.clone(),
-        };
         if export {
-            info!("exporting: {query}, offset: {offset}, limit: {limit}");
+            info!("exporting: {search}, offset: {offset}, limit: {limit}");
         } else {
-            info!("searching: {query}, offset: {offset}, limit: {limit}");
+            info!("searching: {search}, offset: {offset}, limit: {limit}");
         }
-        let (query, _) = state.searcher.query_parser.parse_query_lenient(&query);
+        let (query, _) = state.searcher.query_parser.parse_query_lenient(&search);
         let searcher = state.searcher.reader.searcher();
         total = searcher.search(&query, &Count).unwrap();
 
@@ -157,13 +150,11 @@ pub async fn search(
         return (headers, wtr.into_inner().unwrap()).into_response();
     }
 
-    let search_type = input.search_type.unwrap_or_else(|| "default".to_string());
     let body = SearchPage {
         search,
         offset,
         cases,
         total,
-        search_type,
     };
 
     into_response(&body)
