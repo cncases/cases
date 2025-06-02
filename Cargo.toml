@@ -28,7 +28,7 @@ tantivy = "0.24.1"
 tantivy-jieba = { git = "https://github.com/jiegec/tantivy-jieba" }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tower = "0.5.2"
-tower-http = { version = "0.6.2", features = ["compression-zstd", "timeout"] }
+tower-http = { version = "0.6.5", features = ["compression-zstd", "timeout"] }
 tracing = { version = "0.1", features = [
     "release_max_level_info",
     "max_level_info",
