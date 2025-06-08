@@ -1,6 +1,6 @@
 [package]
 name = "cases"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.85.0"
 
@@ -34,7 +34,7 @@ tracing = { version = "0.1", features = [
     "max_level_info",
 ] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-zip = { version = "2.6.1", default-features = false, features = ["deflate"] }
+zip = { version = "3", default-features = false, features = ["deflate"] }
 
 [target.'cfg(not(target_os = "windows"))'.dependencies]
 tikv-jemallocator = "0.6"

@@ -15,7 +15,9 @@ static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 #[tokio::main]
 async fn main() {
     tracing_subscriber::registry()
-        .with(tracing_subscriber::EnvFilter::new("info,tantivy=warn"))
+        .with(tracing_subscriber::EnvFilter::new(
+            "info,tantivy=warn,html5ever=error",
+        ))
         .with(tracing_subscriber::fmt::layer())
         .init();
 
