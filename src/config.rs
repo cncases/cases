@@ -10,6 +10,7 @@ pub struct Config {
     pub index_with_full_text: bool,
     pub addr: String,
     pub raw_data_path: Option<String>,
+    pub export_limit: Option<usize>,
 }
 
 impl Config {

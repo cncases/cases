@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 use askama::Template;
 use axum::{
     body::Body,
@@ -15,7 +17,9 @@ use tantivy::{
 };
 use tracing::info;
 
-use crate::{AppState, Case, remove_html_tags};
+use crate::{AppState, CONFIG, Case, remove_html_tags};
+
+static EXPORT_LIMIT: LazyLock<usize> = LazyLock::new(|| CONFIG.export_limit.unwrap_or(10000));
 
 #[derive(Template)]
 #[template(path = "case.html", escape = "none")]
@@ -57,7 +61,7 @@ pub async fn search(
     let offset = input.offset.unwrap_or_default();
     let search = input.search.unwrap_or_default();
     let export = input.export.unwrap_or_default();
-    let limit = if export { 10000 } else { 20 };
+    let limit = if export { *EXPORT_LIMIT } else { 20 };
     let mut ids: IndexSet<u32> = IndexSet::with_capacity(20);
     let mut total = 0;
     if !search.is_empty() {
