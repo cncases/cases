@@ -2848,8 +2848,8 @@ dependencies = [
 
 [[package]]
 name = "tantivy-jieba"
-version = "0.14.0"
-source = "git+https://github.com/jiegec/tantivy-jieba#320f0809e748a48f50b9be66412fecf2c55c3031"
+version = "0.15.0"
+source = "git+https://github.com/jiegec/tantivy-jieba#1afdf0ef67ae233cbb5925c4111b4bea9870a6b2"
 dependencies = [
  "jieba-rs",
  "lazy_static",
