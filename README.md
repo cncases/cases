@@ -2,7 +2,7 @@
 
 中国裁判文书网搜索
 
-![https://caseopen.org/](https://up.caseopen.org/api/badge/1/status)
+[![](https://up.caseopen.org/api/badge/1/status)](https://caseopen.org/)
 
 - Demo: https://caseopen.org/
 - Status: https://up.caseopen.org/status/up
