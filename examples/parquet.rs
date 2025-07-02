@@ -107,8 +107,8 @@ fn main() {
             )
             .unwrap();
 
-            let file_name = format!("cases_{}.parquet", count);
-            println!("Writing {}", file_name);
+            let file_name = format!("cases_{count}.parquet");
+            println!("Writing {file_name}");
             let file = File::create(file_name).unwrap();
             let mut writer =
                 ArrowWriter::try_new(&file, batch.schema(), Some(props.clone())).unwrap();
@@ -164,8 +164,8 @@ fn main() {
         )
         .unwrap();
 
-        let file_name = format!("cases_{}.parquet", count);
-        println!("Writing {}", file_name);
+        let file_name = format!("cases_{count}.parquet");
+        println!("Writing {file_name}");
         let file = File::create(file_name).unwrap();
         let mut writer = ArrowWriter::try_new(&file, batch.schema(), Some(props)).unwrap();
         writer.write(&batch).expect("Writing batch");

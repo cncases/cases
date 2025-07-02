@@ -116,11 +116,11 @@ fn unzip(path: &str) {
 
     let mut meta_file = fs::File::create("meta.txt").unwrap();
     for (word, count) in meta_count {
-        writeln!(meta_file, "{:05} {}", count, word).unwrap();
+        writeln!(meta_file, "{count:05} {word}").unwrap();
     }
 
     let mut fulltext_file = fs::File::create("fulltext.txt").unwrap();
     for (word, count) in fulltext_count {
-        writeln!(fulltext_file, "{:05} {}", count, word).unwrap();
+        writeln!(fulltext_file, "{count:05} {word}").unwrap();
     }
 }

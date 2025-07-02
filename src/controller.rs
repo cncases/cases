@@ -105,7 +105,7 @@ pub async fn search(
 
     // export to csv
     if export {
-        let fname = format!("{}_{}_{}_{}.csv", search, total, limit, offset);
+        let fname = format!("{search}_{total}_{limit}_{offset}.csv");
         let body = Vec::new();
         let mut wtr = csv::Writer::from_writer(body);
         wtr.write_record([
@@ -148,7 +148,7 @@ pub async fn search(
             (header::CONTENT_TYPE, "text/csv; charset=utf-8"),
             (
                 header::CONTENT_DISPOSITION,
-                &format!("attachment; filename={}", fname),
+                &format!("attachment; filename={fname}"),
             ),
         ];
         return (headers, wtr.into_inner().unwrap()).into_response();
