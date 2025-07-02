@@ -2,6 +2,9 @@
 
 中国裁判文书网搜索
 
+- Demo: https://caseopen.org/
+- Status: https://up.caseopen.org/status/up
+
 ## 用法
 
 > [!CAUTION]
