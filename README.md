@@ -2,6 +2,8 @@
 
 中国裁判文书网搜索
 
+![https://caseopen.org/](https://up.caseopen.org/api/badge/1/status)
+
 - Demo: https://caseopen.org/
 - Status: https://up.caseopen.org/status/up
 
