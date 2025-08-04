@@ -25,7 +25,7 @@ scraper = "0.23.1"
 serde = { version = "1", features = ["derive"] }
 stop-words = "0.8.1"
 tantivy = "0.24.2"
-tantivy-jieba = "0.15.0"
+tantivy-jieba = "0.16.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tower = "0.5.2"
 tower-http = { version = "0.6.6", features = ["compression-zstd", "timeout"] }
@@ -40,10 +40,10 @@ zip = { version = "4", default-features = false, features = ["deflate"] }
 tikv-jemallocator = "0.6"
 
 [dev-dependencies]
-arrow = { version = "55", default-features = false }
+arrow = { version = "56", default-features = false }
 clickhouse = { version = "0.13.3" }
 jieba-rs = "0.8.0"
-parquet = { version = "55", default-features = false, features = [
+parquet = { version = "56", default-features = false, features = [
     "arrow",
     "lz4",
 ] }
