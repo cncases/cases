@@ -525,7 +525,7 @@ dependencies = [
  "csv",
  "fjall",
  "indexmap",
- "jieba-rs",
+ "jieba-rs 0.7.4",
  "parquet",
  "scraper",
  "serde",
@@ -737,7 +737,7 @@ dependencies = [
  "cssparser-macros",
  "dtoa-short",
  "itoa",
- "phf",
+ "phf 0.11.3",
  "smallvec",
 ]
 
@@ -1553,7 +1553,16 @@ version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c676b32a471d3cfae8dac2ad2f8334cd52e53377733cca8c1fb0a5062fec192"
 dependencies = [
- "phf_codegen",
+ "phf_codegen 0.11.3",
+]
+
+[[package]]
+name = "jieba-macros"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6105f38f083bb1a79ad523bd32fa0d8ffcb6abd2fc4da9da203c32bca5b6ace3"
+dependencies = [
+ "phf_codegen 0.12.1",
 ]
 
 [[package]]
@@ -1565,9 +1574,23 @@ dependencies = [
  "cedarwood",
  "fxhash",
  "include-flate",
- "jieba-macros",
+ "jieba-macros 0.7.1",
  "lazy_static",
- "phf",
+ "phf 0.11.3",
+ "regex",
+]
+
+[[package]]
+name = "jieba-rs"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "47982a320106da83b0c5d6aec0fb83e109f0132b69670b063adaa6fa5b4f3f4a"
+dependencies = [
+ "cedarwood",
+ "fxhash",
+ "include-flate",
+ "jieba-macros 0.8.0",
+ "phf 0.12.1",
  "regex",
 ]
 
@@ -1801,8 +1824,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c7a7213d12e1864c0f002f52c2923d4556935a43dec5e71355c2760e0f6e7a18"
 dependencies = [
  "log",
- "phf",
- "phf_codegen",
+ "phf 0.11.3",
+ "phf_codegen 0.11.3",
  "string_cache",
  "string_cache_codegen",
  "tendril",
@@ -2135,7 +2158,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1fd6780a80ae0c52cc120a26a1a42c1ae51b247a253e4e06113d23d2c2edd078"
 dependencies = [
  "phf_macros",
- "phf_shared",
+ "phf_shared 0.11.3",
+]
+
+[[package]]
+name = "phf"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "913273894cec178f401a31ec4b656318d95473527be05c0752cc41cdc32be8b7"
+dependencies = [
+ "phf_shared 0.12.1",
+ "serde",
 ]
 
 [[package]]
@@ -2144,8 +2177,18 @@ version = "0.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "aef8048c789fa5e851558d709946d6d79a8ff88c0440c587967f8e94bfb1216a"
 dependencies = [
- "phf_generator",
- "phf_shared",
+ "phf_generator 0.11.3",
+ "phf_shared 0.11.3",
+]
+
+[[package]]
+name = "phf_codegen"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "efbdcb6f01d193b17f0b9c3360fa7e0e620991b193ff08702f78b3ce365d7e61"
+dependencies = [
+ "phf_generator 0.12.1",
+ "phf_shared 0.12.1",
 ]
 
 [[package]]
@@ -2154,8 +2197,18 @@ version = "0.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3c80231409c20246a13fddb31776fb942c38553c51e871f8cbd687a4cfb5843d"
 dependencies = [
- "phf_shared",
+ "phf_shared 0.11.3",
  "rand",
+]
+
+[[package]]
+name = "phf_generator"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2cbb1126afed61dd6368748dae63b1ee7dc480191c6262a3b4ff1e29d86a6c5b"
+dependencies = [
+ "fastrand",
+ "phf_shared 0.12.1",
 ]
 
 [[package]]
@@ -2164,8 +2217,8 @@ version = "0.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f84ac04429c13a7ff43785d75ad27569f2951ce0ffd30a3321230db2fc727216"
 dependencies = [
- "phf_generator",
- "phf_shared",
+ "phf_generator 0.11.3",
+ "phf_shared 0.11.3",
  "proc-macro2",
  "quote",
  "syn",
@@ -2176,6 +2229,15 @@ name = "phf_shared"
 version = "0.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67eabc2ef2a60eb7faa00097bd1ffdb5bd28e62bf39990626a582201b7a754e5"
+dependencies = [
+ "siphasher",
+]
+
+[[package]]
+name = "phf_shared"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "06005508882fb681fd97892ecff4b7fd0fee13ef1aa569f8695dae7ab9099981"
 dependencies = [
  "siphasher",
 ]
@@ -2510,8 +2572,8 @@ dependencies = [
  "fxhash",
  "log",
  "new_debug_unreachable",
- "phf",
- "phf_codegen",
+ "phf 0.11.3",
+ "phf_codegen 0.11.3",
  "precomputed-hash",
  "servo_arc",
  "smallvec",
@@ -2712,7 +2774,7 @@ checksum = "bf776ba3fa74f83bf4b63c3dcbbf82173db2632ed8452cb2d891d33f459de70f"
 dependencies = [
  "new_debug_unreachable",
  "parking_lot",
- "phf_shared",
+ "phf_shared 0.11.3",
  "precomputed-hash",
  "serde",
 ]
@@ -2723,8 +2785,8 @@ version = "0.5.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c711928715f1fe0fe509c53b43e993a9a557babc2d0a3567d0a3006f1ac931a0"
 dependencies = [
- "phf_generator",
- "phf_shared",
+ "phf_generator 0.11.3",
+ "phf_shared 0.11.3",
  "proc-macro2",
  "quote",
 ]
@@ -2866,11 +2928,11 @@ dependencies = [
 
 [[package]]
 name = "tantivy-jieba"
-version = "0.15.0"
+version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b92041c7f6304903c95c86123d160e6b620c1dfb01383f0023a55005f64c9cd"
+checksum = "3b08147cc130e323ecc522117927b198bec617fe1df562a0b6449905858d0363"
 dependencies = [
- "jieba-rs",
+ "jieba-rs 0.8.0",
  "lazy_static",
  "tantivy-tokenizer-api",
 ]
