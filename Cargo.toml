@@ -23,7 +23,7 @@ fjall = { version = "2.11.2", default-features = false, features = [
 indexmap = "2"
 scraper = "0.24.0"
 serde = { version = "1", features = ["derive"] }
-stop-words = "0.8.1"
+stop-words = "0.9.0"
 tantivy = "0.25.0"
 tantivy-jieba = "0.16.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
