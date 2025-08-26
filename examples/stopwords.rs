@@ -29,7 +29,7 @@ fn unzip(path: &str) {
         .split_whitespace()
         .map(|x| x.to_owned())
         .collect();
-    custom_stop_words.extend(stop_words);
+    custom_stop_words.extend(stop_words.iter().map(|x| x.to_string()));
 
     for subdir in fs::read_dir(path).unwrap() {
         let subdir = subdir.unwrap();

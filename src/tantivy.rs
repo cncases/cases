@@ -59,9 +59,9 @@ impl Tan {
         let custom_stop_words = include_str!("../stopwords.txt");
         let mut custom_stop_words: HashSet<String> = custom_stop_words
             .split_whitespace()
-            .map(|x| x.to_owned())
+            .map(|x| x.to_string())
             .collect();
-        custom_stop_words.extend(stop_words);
+        custom_stop_words.extend(stop_words.iter().map(|x| x.to_string()));
 
         let jieba_tokenizer = tantivy_jieba::JiebaTokenizer {};
         let tokenizer = TextAnalyzer::builder(jieba_tokenizer)
