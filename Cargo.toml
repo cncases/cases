@@ -42,7 +42,7 @@ tikv-jemallocator = "0.6"
 [dev-dependencies]
 arrow = { version = "56", default-features = false }
 clickhouse = { version = "0.13.3" }
-jieba-rs = "0.8.0"
+jieba-rs = "0.8.1"
 parquet = { version = "56", default-features = false, features = [
     "arrow",
     "lz4",
