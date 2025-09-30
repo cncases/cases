@@ -6,7 +6,7 @@ rust-version = "1.85.0"
 
 [dependencies]
 askama = { version = "0.14" }
-axum = { version = "0.8.4", features = [
+axum = { version = "0.8.5", features = [
     "http2",
     "query",
     "tokio",
@@ -42,7 +42,7 @@ tikv-jemallocator = "0.6"
 [dev-dependencies]
 arrow = { version = "56", default-features = false }
 clickhouse = { version = "0.13.3" }
-jieba-rs = "0.8.1"
+jieba-rs = "0.8"
 parquet = { version = "56", default-features = false, features = [
     "arrow",
     "lz4",
