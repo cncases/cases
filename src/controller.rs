@@ -58,7 +58,10 @@ pub async fn search(
     Query(input): Query<QuerySearch>,
     State(state): State<AppState>,
 ) -> impl IntoResponse {
-    let offset = input.offset.unwrap_or_default();
+    let mut offset = input.offset.unwrap_or_default();
+    if offset > 100000 {
+        offset = 100000
+    }
     let search = input.search.unwrap_or_default();
     let export = input.export.unwrap_or_default();
     let limit = if export { *EXPORT_LIMIT } else { 20 };
