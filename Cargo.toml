@@ -40,7 +40,7 @@ zip = { version = "6", default-features = false, features = ["deflate"] }
 tikv-jemallocator = "0.6"
 
 [dev-dependencies]
-arrow = { version = "56", default-features = false }
+arrow = { version = "57", default-features = false }
 clickhouse = { version = "0.13.3" }
 jieba-rs = "0.8.0"
 parquet = { version = "56", default-features = false, features = [
