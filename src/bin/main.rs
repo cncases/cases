@@ -1,4 +1,4 @@
-use axum::{Router, routing::get};
+use axum::{Router, http::StatusCode, routing::get};
 use cases::{AppState, CONFIG, Tan, case, help, kv_sep_partition_option, logo, search, style};
 use fjall::Config;
 use std::{net::SocketAddr, sync::Arc, time::Duration};
@@ -30,9 +30,13 @@ async fn main() {
         .unwrap();
     let app_state = AppState { db, searcher };
 
-    let middleware_stack = ServiceBuilder::new()
-        .layer(CompressionLayer::new())
-        .layer(TimeoutLayer::new(Duration::from_secs(10)));
+    let middleware_stack =
+        ServiceBuilder::new()
+            .layer(CompressionLayer::new())
+            .layer(TimeoutLayer::with_status_code(
+                StatusCode::REQUEST_TIMEOUT,
+                Duration::from_secs(10),
+            ));
 
     let app = Router::new()
         .route("/", get(search))

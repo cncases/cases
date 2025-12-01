@@ -77,7 +77,7 @@ async fn main() {
         count += 1;
         batch.push(new_case);
         if batch.len() >= 100000 {
-            let mut insert = client.insert("cases").unwrap();
+            let mut insert = client.insert::<NewCase>("cases").await.unwrap();
             for case in batch.iter() {
                 insert.write(case).await.unwrap();
             }
@@ -87,7 +87,7 @@ async fn main() {
         }
     }
 
-    let mut insert = client.insert("cases").unwrap();
+    let mut insert = client.insert::<NewCase>("cases").await.unwrap();
     for case in batch.iter() {
         insert.write(case).await.unwrap();
     }

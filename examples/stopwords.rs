@@ -59,7 +59,7 @@ fn unzip(path: &str) {
                                     acc
                                 });
 
-                        let meta = vec![
+                        let meta = [
                             case.case_id,
                             case.case_name,
                             case.court,
