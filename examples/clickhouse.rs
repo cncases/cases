@@ -11,17 +11,15 @@
 /// CREATE TABLE
 ///     cases (
 ///         `id` UInt32,
-///         `doc_id` String,
 ///         `case_id` Nullable(String),
 ///         `case_name` Nullable(String),
 ///         `court` Nullable(String),
 ///         `case_type` LowCardinality(Nullable(String)),
 ///         `procedure` LowCardinality(Nullable(String)),
-///         `judgment_date` LowCardinality(Nullable(String)),
-///         `public_date` LowCardinality(Nullable(String)),
+///         `judgment_date` Nullable(Date),
+///         `public_date` Nullable(Date),
 ///         `parties` Nullable(String),
 ///         `cause` Nullable(String)  CODEC(ZSTD),
-///         `legal_basis` Nullable(String)  CODEC(ZSTD),
 ///     ) ENGINE = MergeTree () PRIMARY KEY (
 ///         id
 ///     )
@@ -30,6 +28,7 @@ use bincode::config::standard;
 use cases::{CONFIG, Case, kv_sep_partition_option};
 use clickhouse::{Client, Row};
 use fjall::Config;
+use jiff::civil::{Date, date};
 use serde::{Deserialize, Serialize};
 
 #[tokio::main]
@@ -52,26 +51,27 @@ async fn main() {
         let (k, v) = i.unwrap();
         let id = u32::from_be_bytes(k[..].try_into().unwrap());
         let (case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
-
-        let legal_basis = if case.legal_basis.is_empty() || case.legal_basis == "," {
-            None
-        } else {
-            Some(case.legal_basis)
-        };
-
+        let judgment_date = case
+            .judgment_date
+            .parse::<Date>()
+            .ok()
+            .map(|d| d.since(date(1970, 1, 1)).unwrap().get_days() as u16);
+        let public_date = case
+            .public_date
+            .parse::<Date>()
+            .ok()
+            .map(|d| d.since(date(1970, 1, 1)).unwrap().get_days() as u16);
         let new_case = NewCase {
             id,
-            doc_id: case.doc_id,
             case_id: (!case.case_id.is_empty()).then_some(case.case_id),
             case_name: (!case.case_name.is_empty()).then_some(case.case_name),
             court: (!case.court.is_empty()).then_some(case.court),
             case_type: (!case.case_type.is_empty()).then_some(case.case_type),
             procedure: (!case.procedure.is_empty()).then_some(case.procedure),
-            judgment_date: (!case.judgment_date.is_empty()).then_some(case.judgment_date),
-            public_date: (!case.public_date.is_empty()).then_some(case.public_date),
+            judgment_date,
+            public_date,
             parties: (!case.parties.is_empty()).then_some(case.parties),
             cause: (!case.cause.is_empty()).then_some(case.cause),
-            legal_basis,
         };
 
         count += 1;
@@ -99,15 +99,13 @@ async fn main() {
 #[derive(Debug, Row, Serialize, Deserialize)]
 struct NewCase {
     id: u32,
-    doc_id: String,
     case_id: Option<String>,
     case_name: Option<String>,
     court: Option<String>,
     case_type: Option<String>,
     procedure: Option<String>,
-    judgment_date: Option<String>,
-    public_date: Option<String>,
+    judgment_date: Option<u16>,
+    public_date: Option<u16>,
     parties: Option<String>,
     cause: Option<String>,
-    legal_basis: Option<String>,
 }

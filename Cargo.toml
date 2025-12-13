@@ -21,6 +21,7 @@ fjall = { version = "2.11.2", default-features = false, features = [
     "miniz",
 ] }
 indexmap = "2"
+jiff = { version = "0.2.16", default-features = false, features = ["std"] }
 scraper = "0.24.0"
 serde = { version = "1", features = ["derive"] }
 stop-words = "0.9.0"
