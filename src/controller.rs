@@ -20,6 +20,7 @@ use tracing::info;
 use crate::{AppState, CONFIG, Case, remove_html_tags};
 
 static EXPORT_LIMIT: LazyLock<usize> = LazyLock::new(|| CONFIG.export_limit.unwrap_or(10000));
+static MAX_RESULTS: LazyLock<usize> = LazyLock::new(|| CONFIG.max_results.unwrap_or(50000));
 
 #[derive(Template)]
 #[template(path = "case.html", escape = "none")]
@@ -59,8 +60,8 @@ pub async fn search(
     State(state): State<AppState>,
 ) -> impl IntoResponse {
     let mut offset = input.offset.unwrap_or_default();
-    if offset > 100000 {
-        offset = 100000
+    if offset > *MAX_RESULTS {
+        offset = *MAX_RESULTS
     }
     let search = input.search.unwrap_or_default();
     let export = input.export.unwrap_or_default();
