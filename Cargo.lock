@@ -493,7 +493,7 @@ checksum = "6236364b88b9b6d0bc181ba374cf1ab55ba3ef97a1cb6f8cddad48a273767fb5"
 
 [[package]]
 name = "cases"
-version = "0.2.3"
+version = "0.2.4"
 dependencies = [
  "arrow",
  "askama",
