@@ -74,6 +74,7 @@ pub async fn search(
         } else {
             info!("searching: {search}, offset: {offset}, limit: {limit}");
         }
+        let search = fast2s::convert(&search);
         let (query, _) = state.searcher.query_parser.parse_query_lenient(&search);
         let searcher = state.searcher.reader.searcher();
         total = searcher.search(&query, &Count).unwrap();

@@ -1,6 +1,6 @@
 [package]
 name = "cases"
-version = "0.2.4"
+version = "0.2.5"
 edition = "2024"
 rust-version = "1.85.0"
 
@@ -16,6 +16,7 @@ axum = { version = "0.8.7", features = [
 basic-toml = "*"
 bincode = "2.0.1"
 csv = "1"
+fast2s = "0.3.1"
 fjall = { version = "2.11.2", default-features = false, features = [
     "single_writer_tx",
     "miniz",
