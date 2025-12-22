@@ -14,7 +14,7 @@ axum = { version = "0.8.7", features = [
     "json",
 ], default-features = false }
 basic-toml = "*"
-bincode = "2.0.1"
+bincode = "3.0.0"
 csv = "1"
 fast2s = "0.3.1"
 fjall = { version = "2.11.2", default-features = false, features = [
