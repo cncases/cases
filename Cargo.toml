@@ -27,7 +27,7 @@ scraper = "0.25.0"
 serde = { version = "1", features = ["derive"] }
 stop-words = "0.9.0"
 tantivy = "0.25.0"
-tantivy-jieba = "0.17.0"
+tantivy-jieba = "0.18.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tower = "0.5.2"
 tower-http = { version = "0.6.6", features = ["compression-zstd", "timeout"] }
