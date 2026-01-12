@@ -85,20 +85,20 @@ fn main() {
         if !case.judgment_date.is_empty() {
             doc.add_text(judgment_date, &case.judgment_date);
             let s: Vec<&str> = case.judgment_date.split("-").collect();
-            if let Some(y) = s.first() {
-                if let Ok(judge_year) = y.parse() {
-                    doc.add_u64(year, judge_year);
-                }
+            if let Some(y) = s.first()
+                && let Ok(judge_year) = y.parse()
+            {
+                doc.add_u64(year, judge_year);
             }
-            if let Some(m) = s.get(1) {
-                if let Ok(judge_month) = m.parse() {
-                    doc.add_u64(month, judge_month);
-                }
+            if let Some(m) = s.get(1)
+                && let Ok(judge_month) = m.parse()
+            {
+                doc.add_u64(month, judge_month);
             }
-            if let Some(d) = s.get(2) {
-                if let Ok(judge_day) = d.parse() {
-                    doc.add_u64(day, judge_day);
-                }
+            if let Some(d) = s.get(2)
+                && let Ok(judge_day) = d.parse()
+            {
+                doc.add_u64(day, judge_day);
             }
         }
         if !case.public_date.is_empty() {

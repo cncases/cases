@@ -46,7 +46,7 @@ fn convert(raw_path: &str, db_path: &str) {
                     for result in rdr.deserialize() {
                         id += 1;
                         if db.contains_key(id.to_be_bytes()).unwrap() {
-                            if id % 10000 == 0 {
+                            if id.is_multiple_of(10000) {
                                 info!("skipping {}", id);
                             }
                             continue;
