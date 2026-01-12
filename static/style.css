@@ -246,7 +246,7 @@ a:hover .underlineonhover::after {
     font-size: 0.95rem;
 }
 
-.search-result-text p:first-of-type {
+.search-result-text .info {
     color: var(--text-muted);
     font-size: 0.85rem;
     display: flex;
