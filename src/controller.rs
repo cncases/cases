@@ -181,18 +181,6 @@ pub async fn style() -> impl IntoResponse {
     (headers, include_str!("../static/style.css"))
 }
 
-pub async fn logo() -> impl IntoResponse {
-    let headers = [
-        (header::CONTENT_TYPE, "image/png"),
-        (
-            header::CACHE_CONTROL,
-            "public, max-age=1209600, s-maxage=86400",
-        ),
-    ];
-
-    (headers, include_bytes!("../static/logo.png").as_slice())
-}
-
 pub async fn help() -> impl IntoResponse {
     let headers = [
         (header::CONTENT_TYPE, "text/plain; charset=utf-8"),

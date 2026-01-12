@@ -1,5 +1,5 @@
 use axum::{Router, http::StatusCode, routing::get};
-use cases::{AppState, CONFIG, Tan, case, help, kv_sep_partition_option, logo, search, style};
+use cases::{AppState, CONFIG, Tan, case, help, kv_sep_partition_option, search, style};
 use fjall::Config;
 use std::{net::SocketAddr, sync::Arc, time::Duration};
 use tokio::net::TcpListener;
@@ -43,7 +43,6 @@ async fn main() {
         .route("/case/{id}", get(case))
         .route("/style.css", get(style))
         .route("/help.txt", get(help))
-        .route("/logo.png", get(logo))
         .layer(middleware_stack)
         .with_state(app_state);
 

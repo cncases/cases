@@ -1,6 +1,6 @@
 use bincode::{Decode, Encode};
 pub use config::CONFIG;
-pub use controller::{case, help, logo, search, style};
+pub use controller::{case, help, search, style};
 use fjall::{KvSeparationOptions, PartitionCreateOptions, PartitionHandle};
 use scraper::Html;
 use serde::{Deserialize, Serialize};

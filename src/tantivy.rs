@@ -63,7 +63,7 @@ impl Tan {
             .collect();
         custom_stop_words.extend(stop_words.iter().map(|x| x.to_string()));
 
-        let jieba_tokenizer = tantivy_jieba::JiebaTokenizer {};
+        let jieba_tokenizer = tantivy_jieba::JiebaTokenizer::new();
         let tokenizer = TextAnalyzer::builder(jieba_tokenizer)
             .filter(StopWordFilter::remove(custom_stop_words))
             .filter(RemoveLongFilter::limit(40))
