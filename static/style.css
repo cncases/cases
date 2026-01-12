@@ -283,7 +283,7 @@ a:hover .underlineonhover::after {
     line-height: 25pt;
     text-indent: 30pt;
     margin: 0.5pt 0cm;
-    font-family: å®‹ä½“;
+    font-family: 宋体;
     font-size: 15pt;
     text-align: justify;
 
@@ -294,7 +294,7 @@ a:hover .underlineonhover::after {
 
 .full_text > div:not(.c_right):nth-child(-n + 3) {
     text-align: center;
-    font-family: é»‘ä½“;
+    font-family: 黑体;
     font-size: 18pt;
 }
 
@@ -475,3 +475,4 @@ mark, b.highlight {
     background: rgba(74, 144, 164, 0.3);
     color: var(--text-primary);
 }
+
