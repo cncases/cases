@@ -293,7 +293,8 @@ a:hover .underlineonhover::after {
     }
 }
 
-.full_text > div:not(.c_right):nth-child(-n + 3) {
+.full_text > div:not(.c_right):nth-child(-n + 3),
+.c_header {
     text-align: center;
     font-family: 黑体;
     font-size: 18pt;
