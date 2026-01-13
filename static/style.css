@@ -419,11 +419,6 @@ mark, b.highlight {
 }
 
 @media (max-width: 480px) {
-    .search-second-nav {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
     .search-result-text b {
         display: block;
         margin-bottom: 0.25rem;
