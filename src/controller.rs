@@ -31,7 +31,8 @@ pub struct CasePage {
 pub async fn case(State(state): State<AppState>, Path(id): Path<u32>) -> impl IntoResponse {
     info!("id: {}", id);
     if let Some(v) = state.db.get(id.to_be_bytes()).unwrap() {
-        let (case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
+        let (mut case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
+        case.parties = case.parties.trim_matches(',').replace(',', "，");
         let case = CasePage { case };
         into_response(&case)
     } else {
@@ -140,7 +141,7 @@ pub async fn search(
                 &case.procedure,
                 &case.judgment_date,
                 &case.public_date,
-                &case.parties,
+                &case.parties.trim_matches(',').replace(',', "，"),
                 &case.cause,
                 &case.legal_basis,
                 &case.full_text,
