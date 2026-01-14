@@ -51,5 +51,3 @@ cargo build -r
 ## 说明
 
 当程序和配置文件放在同一目录下，且配置文件命名为 `config.toml` 时，可以省略配置文件路径参数。
-
-![screenshot](Screenshot.png)
