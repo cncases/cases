@@ -34,7 +34,7 @@ pub async fn case(State(state): State<AppState>, Path(id): Path<u32>) -> impl In
         let (mut case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
         case.parties = case.parties.trim_matches(',').replace(',', "，");
         case.legal_basis = case.legal_basis.trim_matches(',').replace(',', "，");
-        if let Some(pos) = case.full_text.find(r#"class="c_header""#)
+        if let Some(pos) = case.full_text.find(r#"c_header"#)
             && let Some(start) = case.full_text[..pos].rfind("<")
         {
             case.full_text = case.full_text[start..].to_owned();
