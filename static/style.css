@@ -364,6 +364,7 @@ footer a:hover {
 
 footer p {
     font-size: 0.9rem;
+    text-align: center;
 }
 
 /* ===== Highlight for Search Results ===== */
@@ -481,3 +482,130 @@ mark, b.highlight {
     color: var(--text-primary);
 }
 
+/* ===== Print Styles ===== */
+@media print {
+    /* Reset for print */
+    *, *::before, *::after {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    /* Page setup */
+    @page {
+        size: A4;
+        margin: 2cm 1.5cm;
+    }
+
+    @page :first {
+        margin-top: 1.5cm;
+    }
+
+    html {
+        font-size: 12pt;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", 
+                     "Microsoft YaHei", "SimSun", "宋体", serif;
+        line-height: 1.5;
+        min-height: auto;
+        background: white !important;
+    }
+
+    /* Hide non-essential elements */
+    .search-header,
+    .search-nav,
+    .search-second-nav,
+    .pagination,
+    footer {
+        display: none !important;
+    }
+
+    /* Main content adjustments */
+    main.search-results {
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .search-result-text {
+        border: none !important;
+        border-radius: 0;
+        padding: 0;
+        margin: 0;
+        box-shadow: none !important;
+        animation: none !important;
+        background: transparent !important;
+    }
+
+    .search-result-text:hover {
+        transform: none;
+    }
+
+    /* Title styling for print */
+    .search-result-text h3 {
+        font-size: 16pt;
+        font-family: "PingFang SC", "Microsoft YaHei", "SimHei", "黑体", sans-serif;
+        color: #3d7a8c !important;
+        margin-bottom: 0.8cm;
+        padding-bottom: 0.3cm;
+        border-bottom: 2px solid #4a90a4;
+        page-break-after: avoid;
+    }
+
+    /* Meta info styling - preserve some site style */
+    .search-result-text > p {
+        font-size: 10.5pt;
+        margin-bottom: 0.4em;
+        text-indent: 0;
+        color: #333 !important;
+        line-height: 1.8;
+    }
+
+    .search-result-text b {
+        font-weight: 600;
+        min-width: 5em;
+        color: #3d7a8c !important;
+    }
+
+    /* Full text styling for print */
+    .full_text {
+        font-family: "SimSun", "宋体", serif;
+        font-size: 14pt;
+        line-height: 2;
+        text-indent: 2em;
+        text-align: justify;
+        margin-top: 0;
+        page-break-before: always;
+        color: #000 !important;
+    }
+
+    .full_text > div:not(.c_right):nth-child(-n + 3),
+    .c_header {
+        font-family: "SimHei", "黑体", sans-serif;
+        font-size: 16pt;
+        text-align: center;
+        text-indent: 0;
+    }
+
+    .c_right {
+        text-align: right;
+        text-indent: 0;
+    }
+
+    /* Prevent page breaks in awkward places */
+    h3, p, div {
+        orphans: 3;
+        widows: 3;
+    }
+
+    /* Links in print */
+    a {
+        text-decoration: none;
+        color: #4a90a4 !important;
+    }
+
+    a[href^="http"]::after {
+        content: none;
+    }
+}
