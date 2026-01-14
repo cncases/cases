@@ -287,10 +287,12 @@ a:hover .underlineonhover::after {
     font-family: 宋体;
     font-size: 15pt;
     text-align: justify;
+}
 
-    .c_right {
-        text-align: right;
-    }
+/* id="1" */
+#\31,
+c_right {
+    text-align: right;
 }
 
 .full_text > div:not(.c_right):nth-child(-n + 3),
