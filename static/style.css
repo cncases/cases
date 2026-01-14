@@ -303,6 +303,11 @@ a:hover .underlineonhover::after {
     font-size: 18pt;
 }
 
+p {
+    text-align: justify;
+    text-justify: inter-character;
+}
+
 /* ===== Pagination ===== */
 .pagination {
     max-width: var(--max-width);
