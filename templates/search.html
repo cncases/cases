@@ -8,13 +8,13 @@
             content="default-src 'none'; img-src 'self'; script-src 'none'; style-src 'self'; object-src 'none'; font-src 'none'; form-action 'self'; frame-src 'none'; media-src 'none'; manifest-src 'none'; worker-src 'none';"
         />
         <title>裁判文书网</title>
-        <link rel="stylesheet" href="/style.css" />
+        <link rel="stylesheet" href="/style.css?v={{env!("CARGO_PKG_VERSION")}}" />
     </head>
     <body>
         <header class="search-header">
             <nav class="search-nav">
                 <form id="search" action="/" method="get">
-                    <div class="searchbar search-searchbar">
+                    <div class="searchbar">
                         <input
                             class="search-input"
                             type="text"

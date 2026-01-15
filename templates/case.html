@@ -8,7 +8,7 @@
             content="default-src 'none'; img-src 'self'; script-src 'none'; style-src 'self'; object-src 'none'; font-src 'none'; form-action 'self'; frame-src 'none'; media-src 'none'; manifest-src 'none'; worker-src 'none';"
         />
         <title>裁判文书网 - {{case.case_id}} - {{case.case_name}}</title>
-        <link rel="stylesheet" href="/style.css" />
+        <link rel="stylesheet" href="/style.css?v={{env!("CARGO_PKG_VERSION")}}" />
     </head>
     <body>
         <main class="search-results">
@@ -24,7 +24,7 @@
                 <p><b>案由</b>：{{ case.cause }}</p>
                 <p><b>原始链接</b>：{{ case.doc_id }}</p>
                 <p><b>法律依据</b>：{{ case.legal_basis }}</p>
-                <br><br>
+                <br /><br /><br />
                 <div class="full_text">{{ case.full_text }}</div>
             </div>
         </main>
