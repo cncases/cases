@@ -22,7 +22,9 @@
 }
 
 /* ===== Reset & Base ===== */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -34,9 +36,10 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", 
-                 "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", 
-                 Helvetica, Arial, sans-serif;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica,
+        Arial, sans-serif;
     background: var(--background);
     color: var(--text-primary);
     line-height: 1.6;
@@ -109,7 +112,9 @@ a:hover {
 }
 
 .searchbar:focus-within {
-    box-shadow: 0 0 0 3px rgba(74, 144, 164, 0.2), var(--shadow-lg);
+    box-shadow:
+        0 0 0 3px rgba(74, 144, 164, 0.2),
+        var(--shadow-lg);
     transform: translateY(-1px);
 }
 
@@ -130,7 +135,11 @@ a:hover {
 .search-button {
     padding: 0.875rem 1.25rem;
     border: none;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(
+        135deg,
+        var(--primary-color) 0%,
+        var(--primary-dark) 100%
+    );
     color: white;
     font-size: 1.1rem;
     cursor: pointer;
@@ -138,7 +147,11 @@ a:hover {
 }
 
 .search-button:hover {
-    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+    background: linear-gradient(
+        135deg,
+        var(--primary-light) 0%,
+        var(--primary-color) 100%
+    );
 }
 
 .search-button:active {
@@ -225,7 +238,7 @@ main.search-results {
 }
 
 .underlineonhover::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -2px;
     left: 0;
@@ -368,7 +381,8 @@ footer p {
 }
 
 /* ===== Highlight for Search Results ===== */
-mark, b.highlight {
+mark,
+b.highlight {
     background: linear-gradient(120deg, #fff3e0 0%, #ffe0b2 100%);
     color: var(--text-primary);
     padding: 0.1em 0.3em;
@@ -421,18 +435,6 @@ mark, b.highlight {
         padding: 0.6rem 1.2rem;
         font-size: 0.9rem;
     }
-
-    .full_text {
-        padding: 1rem;
-        font-size: 0.95rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .search-result-text b {
-        display: block;
-        margin-bottom: 0.25rem;
-    }
 }
 
 /* ===== Animations ===== */
@@ -451,11 +453,21 @@ mark, b.highlight {
     animation: fadeIn 0.3s ease forwards;
 }
 
-.search-result-text:nth-child(1) { animation-delay: 0.05s; }
-.search-result-text:nth-child(2) { animation-delay: 0.1s; }
-.search-result-text:nth-child(3) { animation-delay: 0.15s; }
-.search-result-text:nth-child(4) { animation-delay: 0.2s; }
-.search-result-text:nth-child(5) { animation-delay: 0.25s; }
+.search-result-text:nth-child(1) {
+    animation-delay: 0.05s;
+}
+.search-result-text:nth-child(2) {
+    animation-delay: 0.1s;
+}
+.search-result-text:nth-child(3) {
+    animation-delay: 0.15s;
+}
+.search-result-text:nth-child(4) {
+    animation-delay: 0.2s;
+}
+.search-result-text:nth-child(5) {
+    animation-delay: 0.25s;
+}
 
 /* ===== Scrollbar Styling ===== */
 ::-webkit-scrollbar {
@@ -485,7 +497,9 @@ mark, b.highlight {
 /* ===== Print Styles ===== */
 @media print {
     /* Reset for print */
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
         box-shadow: none !important;
         text-shadow: none !important;
     }
@@ -505,8 +519,9 @@ mark, b.highlight {
     }
 
     body {
-        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", 
-                     "Microsoft YaHei", "SimSun", "宋体", serif;
+        font-family:
+            -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
+            "SimSun", "宋体", serif;
         line-height: 1.5;
         min-height: auto;
         background: white !important;
@@ -545,7 +560,8 @@ mark, b.highlight {
     /* Title styling for print */
     .search-result-text h3 {
         font-size: 16pt;
-        font-family: "PingFang SC", "Microsoft YaHei", "SimHei", "黑体", sans-serif;
+        font-family:
+            "PingFang SC", "Microsoft YaHei", "SimHei", "黑体", sans-serif;
         color: #3d7a8c !important;
         margin-bottom: 0.8cm;
         padding-bottom: 0.3cm;
@@ -594,7 +610,9 @@ mark, b.highlight {
     }
 
     /* Prevent page breaks in awkward places */
-    h3, p, div {
+    h3,
+    p,
+    div {
         orphans: 3;
         widows: 3;
     }
