@@ -14,9 +14,6 @@
     --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
     --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.1);
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 18px;
     --transition: all 0.2s ease;
     --max-width: 900px;
 }
@@ -94,11 +91,10 @@ a:hover {
     display: flex;
     align-items: stretch;
     background: var(--surface);
-    border-radius: var(--radius-small);
-    border-color: var(--primary-light);
     overflow: hidden;
     box-shadow: var(--shadow-md);
     transition: var(--transition);
+    border: 1px solid var(--primary-light);
 }
 
 .searchbar:focus-within {
@@ -160,7 +156,6 @@ a:hover {
 .search-second-nav a {
     color: var(--primary-color);
     padding: 0.4rem 0.8rem;
-    border-radius: var(--radius-sm);
     transition: var(--transition);
 }
 
@@ -196,7 +191,6 @@ main.search-results {
 /* ===== Search Result Cards ===== */
 .search-result-text {
     background: var(--surface);
-    border-radius: var(--radius-small);
     padding: 1.5rem 2rem;
     margin-bottom: 1.25rem;
     box-shadow: var(--shadow-sm);
