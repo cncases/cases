@@ -60,9 +60,7 @@
                     case.procedure }}
                 </p>
                 <p>{{ preview }}</p>
-                <a class="nounderline" href="/case/{{id}}" target="_blank"
-                    >{{case.case_id}} - {{ case.court }}</a
-                >
+                <p class="info">{{ case.case_id}} - {{ case.court }}</p>
             </div>
             {% endfor %}
         </main>
