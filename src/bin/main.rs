@@ -1,12 +1,16 @@
 use axum::{Router, http::StatusCode, routing::get};
 use cases::{AppState, CONFIG, Tan, case, help, kv_sep_partition_option, search, style};
 use fjall::Config;
+
 use std::{net::SocketAddr, sync::Arc, time::Duration};
 use tokio::net::TcpListener;
 use tower::ServiceBuilder;
 use tower_http::{compression::CompressionLayer, timeout::TimeoutLayer};
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
+#[cfg(feature = "vsearch")]
+use qdrant_client::Qdrant;
 
 #[cfg(not(target_os = "windows"))]
 #[global_allocator]
@@ -28,7 +32,18 @@ async fn main() {
     let db = keyspace
         .open_partition("cases", kv_sep_partition_option())
         .unwrap();
-    let app_state = AppState { db, searcher };
+
+    #[cfg(feature = "vsearch")]
+    let qclient = Qdrant::from_url(CONFIG.qdrant_grpc.as_str())
+        .build()
+        .unwrap();
+
+    let app_state = AppState {
+        db,
+        searcher,
+        #[cfg(feature = "vsearch")]
+        qclient,
+    };
 
     let middleware_stack =
         ServiceBuilder::new()

@@ -8,6 +8,9 @@ use std::sync::Arc;
 use tantivy::Searcher;
 pub use tantivy::Tan;
 
+#[cfg(feature = "vsearch")]
+use qdrant_client::Qdrant;
+
 mod config;
 mod controller;
 mod tantivy;
@@ -16,6 +19,8 @@ mod tantivy;
 pub struct AppState {
     pub db: PartitionHandle,
     pub searcher: Arc<Searcher>,
+    #[cfg(feature = "vsearch")]
+    pub qclient: Qdrant,
 }
 
 pub fn kv_sep_partition_option() -> PartitionCreateOptions {

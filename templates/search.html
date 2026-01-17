@@ -22,6 +22,12 @@
                             name="search"
                             value="{{ search }}"
                         />
+                        {% if enable_vsearch %}
+                        <select class="search-type-select" id="search_type" name="search_type">
+                            <option value="keyword" {% if search_type != "vsearch" %} selected {% endif %}>关键词搜索</option>
+                            <option value="vsearch" {% if search_type == "vsearch" %} selected {% endif %}>语义搜索</option>
+                        </select>
+                        {% endif %}
                         <button type="submit" class="search-button">🔍</button>
                     </div>
                 </form>
@@ -38,16 +44,23 @@
                 </div>
                 <div>
                     <p>
-                        找到 {{ total }}，<a
-                            class="noline"
+                        {% if search_type =="keyword" %} 找到 {{ total }}，{% endif %}
+                        <a class="noline"
                             title="最多导出10000条，调整offset参数可获得更多结果，offset=10000，即可获得第10000~20000条结果"
                             href="/?search={{ search }}&offset={{ offset }}&export=true"
-                            >导出</a
-                        >
+                        >导出</a>
                     </p>
                 </div>
             </nav>
         </header>
+
+        {% if enable_vsearch %}
+            {% if search_type == "keyword" %}
+                {% if total < 30 %}
+                <p class="suggest_vsearch">当前结果较少，建议使用 <a href="/?search={{ search }}&search_type=vsearch">语义搜索</a></p>
+                {% endif %}
+            {% endif %}
+        {% endif %}
 
         <main class="search-results">
             {% for (id, preview, case) in cases %}
@@ -67,9 +80,9 @@
 
         <div class="pagination">
             {% if cases.len() >= 20 %} {% if offset >= 20 %}
-            <a href="/?search={{ search }}&offset={{ offset - 20 }}">上一页</a
+            <a href="/?search={{ search }}&offset={{ offset - 20 }}&search_type={{ search_type }}">上一页</a
             >&nbsp;&nbsp;&nbsp;&nbsp; {% endif %}
-            <a href="/?search={{ search }}&offset={{ offset + 20 }}">下一页</a>
+            <a href="/?search={{ search }}&offset={{ offset + 20 }}&search_type={{ search_type }}">下一页</a>
             {% endif %}
         </div>
         <footer>

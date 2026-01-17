@@ -1,5 +1,3 @@
-use std::sync::LazyLock;
-
 use askama::Template;
 use axum::{
     body::Body,
@@ -10,12 +8,19 @@ use axum::{
 use bincode::config::standard;
 use indexmap::IndexSet;
 use serde::Deserialize;
+use std::sync::LazyLock;
 use tantivy::{
     DocAddress, Score, TantivyDocument,
     collector::{Count, TopDocs},
     schema::Value,
 };
 use tracing::info;
+
+#[cfg(feature = "vsearch")]
+use fastembed::{EmbeddingModel, InitOptions, TextEmbedding};
+
+#[cfg(feature = "vsearch")]
+use qdrant_client::qdrant::{SearchPointsBuilder, point_id::PointIdOptions};
 
 use crate::{AppState, CONFIG, Case, remove_html_tags};
 
@@ -51,6 +56,7 @@ pub struct QuerySearch {
     search: Option<String>,
     offset: Option<usize>,
     export: Option<bool>,
+    search_type: Option<String>,
 }
 
 #[derive(Template)]
@@ -59,6 +65,8 @@ pub struct SearchPage {
     search: String,
     offset: usize,
     total: usize,
+    search_type: String,
+    enable_vsearch: bool,
     cases: Vec<(u32, String, Case)>,
 }
 
@@ -72,34 +80,94 @@ pub async fn search(
     }
     let search = input.search.unwrap_or_default();
     let export = input.export.unwrap_or_default();
+    let search_type =
+        if cfg!(feature = "vsearch") && input.search_type.as_deref() == Some("vsearch") {
+            "vsearch".to_owned()
+        } else {
+            "keyword".to_owned()
+        };
     let limit = if export { *EXPORT_LIMIT } else { 20 };
     let mut ids: IndexSet<u32> = IndexSet::with_capacity(20);
     let mut total = 0;
-    if !search.is_empty() {
-        if export {
-            info!("exporting: {search}, offset: {offset}, limit: {limit}");
-        } else {
-            info!("searching: {search}, offset: {offset}, limit: {limit}");
-        }
+    if !search.trim().is_empty() {
+        let now = std::time::Instant::now();
         let search = fast2s::convert(&search);
-        let (query, _) = state.searcher.query_parser.parse_query_lenient(&search);
-        let searcher = state.searcher.reader.searcher();
-        total = searcher.search(&query, &Count).unwrap();
+        if search_type == "keyword" {
+            let (query, _) = state.searcher.query_parser.parse_query_lenient(&search);
+            let searcher = state.searcher.reader.searcher();
+            total = searcher.search(&query, &Count).unwrap();
 
-        let top_docs: Vec<(Score, DocAddress)> = searcher
-            .search(&query, &TopDocs::with_limit(limit).and_offset(offset))
-            .unwrap_or_default();
+            let top_docs: Vec<(Score, DocAddress)> = searcher
+                .search(&query, &TopDocs::with_limit(limit).and_offset(offset))
+                .unwrap_or_default();
 
-        for (_score, doc_address) in top_docs {
-            if let Some(id) = searcher
-                .doc::<TantivyDocument>(doc_address)
-                .unwrap()
-                .get_first(state.searcher.id)
-                .unwrap()
-                .as_u64()
-            {
-                ids.insert(id as u32);
+            for (_score, doc_address) in top_docs {
+                if let Some(id) = searcher
+                    .doc::<TantivyDocument>(doc_address)
+                    .unwrap()
+                    .get_first(state.searcher.id)
+                    .unwrap()
+                    .as_u64()
+                {
+                    ids.insert(id as u32);
+                }
             }
+        } else {
+            #[cfg(feature = "vsearch")]
+            if search_type == "vsearch" {
+                {
+                    let mut model = TextEmbedding::try_new(
+                        InitOptions::new(EmbeddingModel::BGESmallZHV15)
+                            .with_show_download_progress(true),
+                    )
+                    .unwrap();
+                    let query_vec = model.embed(vec![&search], None).unwrap();
+
+                    let client = state.qclient;
+                    let search_limit = limit + offset;
+                    if let Ok(search_result) = client
+                        .search_points(
+                            SearchPointsBuilder::new(
+                                "cases",
+                                query_vec.into_iter().next().unwrap(),
+                                search_limit as u64,
+                            )
+                            .with_payload(false)
+                            .limit(limit as u64)
+                            .offset(offset as u64),
+                        )
+                        .await
+                    {
+                        for point in &search_result.result {
+                            let id = point
+                                .id
+                                .as_ref()
+                                .unwrap()
+                                .point_id_options
+                                .as_ref()
+                                .unwrap();
+                            if let PointIdOptions::Num(id) = id {
+                                ids.insert(*id as u32);
+                            }
+                        }
+                    } else {
+                        tracing::error!("Qdrant search_points failed");
+                    }
+                }
+            }
+        }
+
+        let elapsed = now.elapsed().as_secs_f32();
+        if export {
+            info!("exporting: {search}, total:{total}, offset: {offset}, limit: {limit}");
+        } else if search_type == "keyword" {
+            info!(
+                "keyword search: {search}, total: {total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s"
+            );
+        } else {
+            info!(
+                "vsearch search: {search}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s "
+            );
         }
     }
 
@@ -168,9 +236,11 @@ pub async fn search(
 
     let body = SearchPage {
         search,
+        search_type,
         offset,
         cases,
         total,
+        enable_vsearch: cfg!(feature = "vsearch"),
     };
 
     into_response(&body)

@@ -12,6 +12,8 @@ pub struct Config {
     pub raw_data_path: Option<String>,
     pub export_limit: Option<usize>,
     pub max_results: Option<usize>,
+    #[cfg(feature = "vsearch")]
+    pub qdrant_grpc: String,
 }
 
 impl Config {
