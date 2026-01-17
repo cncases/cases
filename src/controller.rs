@@ -125,6 +125,7 @@ pub async fn search(
 
                     let client = state.qclient;
                     let search_limit = limit + offset;
+                    total = search_limit;
                     if let Ok(search_result) = client
                         .search_points(
                             SearchPointsBuilder::new(
@@ -159,14 +160,12 @@ pub async fn search(
 
         let elapsed = now.elapsed().as_secs_f32();
         if export {
-            info!("exporting: {search}, total:{total}, offset: {offset}, limit: {limit}");
-        } else if search_type == "keyword" {
             info!(
-                "keyword search: {search}, total: {total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s"
+                "export {search_type} {search}, total:{total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s"
             );
         } else {
             info!(
-                "vsearch search: {search}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s "
+                "search {search_type} {search}, total:{total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s "
             );
         }
     }
