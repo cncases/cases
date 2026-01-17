@@ -47,7 +47,7 @@
                         {% if search_type =="keyword" %} 找到 {{ total }}，{% endif %}
                         <a class="noline"
                             title="最多导出10000条，调整offset参数可获得更多结果，offset=10000，即可获得第10000~20000条结果"
-                            href="/?search={{ search }}&offset={{ offset }}&export=true"
+                            href="/?search={{ search }}&offset={{ offset }}&export=true&search_type={{ search_type }}"
                         >导出</a>
                     </p>
                 </div>
