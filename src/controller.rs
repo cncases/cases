@@ -20,7 +20,10 @@ use tracing::info;
 use fastembed::{EmbeddingModel, InitOptions, TextEmbedding};
 
 #[cfg(feature = "vsearch")]
-use qdrant_client::qdrant::{SearchPointsBuilder, point_id::PointIdOptions};
+use qdrant_client::{
+    Qdrant,
+    qdrant::{RecommendPointsBuilder, SearchPointsBuilder, point_id::PointIdOptions},
+};
 
 use crate::{AppState, CONFIG, Case, remove_html_tags};
 
@@ -30,10 +33,24 @@ static MAX_RESULTS: LazyLock<usize> = LazyLock::new(|| CONFIG.max_results.unwrap
 #[derive(Template)]
 #[template(path = "case.html", escape = "none")]
 pub struct CasePage {
+    id: u32,
     case: Case,
+    enable_similar: bool,
+    similar_cases: Vec<(u32, String, String)>,
 }
 
-pub async fn case(State(state): State<AppState>, Path(id): Path<u32>) -> impl IntoResponse {
+#[cfg(feature = "vsearch")]
+#[derive(Debug, Deserialize)]
+pub struct QueryCase {
+    #[cfg(feature = "vsearch")]
+    with_similar: Option<bool>,
+}
+
+pub async fn case(
+    #[cfg(feature = "vsearch")] Query(params): Query<QueryCase>,
+    State(state): State<AppState>,
+    Path(id): Path<u32>,
+) -> impl IntoResponse {
     info!("id: {}", id);
     if let Some(v) = state.db.get(id.to_be_bytes()).unwrap() {
         let (mut case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
@@ -44,7 +61,47 @@ pub async fn case(State(state): State<AppState>, Path(id): Path<u32>) -> impl In
         {
             case.full_text = case.full_text[start..].to_owned();
         }
-        let case = CasePage { case };
+
+        #[allow(unused_mut)]
+        let mut enable_similar = false;
+        #[allow(unused_mut)]
+        let mut similar_cases = Vec::new();
+        #[cfg(feature = "vsearch")]
+        {
+            let mut with_similar = params.with_similar.unwrap_or(false);
+            if case.case_type != "刑事案件" {
+                with_similar = false;
+            } else {
+                enable_similar = true;
+            }
+
+            if with_similar {
+                let now = std::time::Instant::now();
+                let similar_ids = similar(id, &state.qclient).await;
+
+                for sid in similar_ids {
+                    if let Some(v) = state.db.get(sid.to_be_bytes()).unwrap() {
+                        let (scase, _): (Case, _) =
+                            bincode::decode_from_slice(&v, standard()).unwrap();
+                        similar_cases.push((sid, scase.case_name, scase.case_id));
+                    }
+                }
+                let elapsed = now.elapsed().as_secs_f32();
+                info!(
+                    "similar id: {}, found {} similar cases, elapsed: {}s",
+                    id,
+                    similar_cases.len(),
+                    elapsed
+                );
+            }
+        }
+
+        let case = CasePage {
+            id,
+            case,
+            enable_similar,
+            similar_cases,
+        };
         into_response(&case)
     } else {
         (StatusCode::NOT_FOUND, "Not found").into_response()
@@ -274,4 +331,24 @@ fn into_response<T: Template>(t: &T) -> Response<Body> {
         Ok(body) => Html(body).into_response(),
         Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     }
+}
+
+#[cfg(feature = "vsearch")]
+pub async fn similar(id: u32, qclient: &Qdrant) -> Vec<u32> {
+    let mut ids = Vec::with_capacity(10);
+    if let Ok(rsp) = qclient
+        .recommend(RecommendPointsBuilder::new("cases", 10).add_positive(id as u64))
+        .await
+    {
+        for point in &rsp.result {
+            if let Some(id) = point.id.as_ref().unwrap().point_id_options.as_ref()
+                && let PointIdOptions::Num(id) = id
+            {
+                ids.push(*id as u32);
+            }
+        }
+    } else {
+        tracing::error!("Qdrant recommend {id} failed");
+    }
+    ids
 }

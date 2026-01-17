@@ -525,6 +525,7 @@ b.highlight {
     .search-nav,
     .search-second-nav,
     .pagination,
+    .similar-cases,
     footer {
         display: none !important;
     }
