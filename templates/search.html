@@ -57,7 +57,9 @@
         {% if enable_vsearch %}
             {% if search_type == "keyword" %}
                 {% if total < 30 %}
-                <p class="suggest_vsearch">当前结果较少，建议使用 <a href="/?search={{ search }}&search_type=vsearch">语义搜索</a></p>
+                    {% if !search.is_empty() %}
+                    <p class="suggest_vsearch">当前结果较少，建议使用 <a href="/?search={{ search }}&search_type=vsearch">语义搜索</a></p>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         {% endif %}
