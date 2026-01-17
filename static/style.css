@@ -140,6 +140,22 @@ a:hover {
     transform: scale(0.95);
 }
 
+.suggest_vsearch {
+    background: linear-gradient(90deg, #e0f7fa 0%, #f1f8e9 100%);
+    border-radius: 6px;
+    padding: 0.7em 1.2em;
+    margin: 1.2em auto 1.5em auto;
+    font-size: 1.05rem;
+}
+
+.search-type-select {
+    background: var(--surface);
+    border: none;
+    border-left: 1px solid var(--primary-light);
+    padding: 0 0.8rem;
+    font-size: 1rem;
+}
+
 /* ===== Secondary Navigation ===== */
 .search-second-nav {
     max-width: var(--max-width);
