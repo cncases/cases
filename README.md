@@ -51,3 +51,13 @@ cargo build -r
 ## 说明
 
 当程序和配置文件放在同一目录下，且配置文件命名为 `config.toml` 时，可以省略配置文件路径参数。
+
+## 开启语义搜索（可选）
+
+1. 构建向量索引，详见 [vsearch](https://github.com/cncases/vsearch) 仓库说明。
+2. 在编译时开启 `vsearch` feature：`cargo build -r -F vsearch`，替换 `main` 可执行文件。
+3. 在配置文件中添加相应配置，例如：
+    - qdrant_grpc = "http://localhost:6334"
+    - embedding_model = 1
+    - collection_name = "cases"
+4. 重启搜索服务。

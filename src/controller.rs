@@ -173,9 +173,13 @@ pub async fn search(
             #[cfg(feature = "vsearch")]
             if search_type == "vsearch" {
                 {
+                    let modle = match CONFIG.embedding_model {
+                        2 => EmbeddingModel::BGELargeZHV15,
+                        _ => EmbeddingModel::BGESmallZHV15,
+                    };
+
                     let mut model = TextEmbedding::try_new(
-                        InitOptions::new(EmbeddingModel::BGESmallZHV15)
-                            .with_show_download_progress(true),
+                        InitOptions::new(modle).with_show_download_progress(true),
                     )
                     .unwrap();
                     let query_vec = model.embed(vec![&search], None).unwrap();
@@ -186,7 +190,7 @@ pub async fn search(
                     if let Ok(search_result) = client
                         .search_points(
                             SearchPointsBuilder::new(
-                                "cases",
+                                &CONFIG.collection_name,
                                 query_vec.into_iter().next().unwrap(),
                                 search_limit as u64,
                             )
@@ -337,7 +341,7 @@ fn into_response<T: Template>(t: &T) -> Response<Body> {
 pub async fn similar(id: u32, qclient: &Qdrant) -> Vec<u32> {
     let mut ids = Vec::with_capacity(10);
     if let Ok(rsp) = qclient
-        .recommend(RecommendPointsBuilder::new("cases", 10).add_positive(id as u64))
+        .recommend(RecommendPointsBuilder::new(&CONFIG.collection_name, 10).add_positive(id as u64))
         .await
     {
         for point in &rsp.result {

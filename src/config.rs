@@ -14,6 +14,10 @@ pub struct Config {
     pub max_results: Option<usize>,
     #[cfg(feature = "vsearch")]
     pub qdrant_grpc: String,
+    #[cfg(feature = "vsearch")]
+    pub embedding_model: u8,
+    #[cfg(feature = "vsearch")]
+    pub collection_name: String,
 }
 
 impl Config {
