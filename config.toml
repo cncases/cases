@@ -11,4 +11,4 @@ raw_data_path = "裁判文书全量数据（已完成）"
 # Only when feature "vsearch" is enabled
 qdrant_grpc = "http://localhost:6334"  # Qdrant gRPC address
 embedding_model = 1                    # 1: BGESmallZHV15, 2: BGELargeZHV15
-collection_name = "cases"             # Qdrant collection name
+collection_name = "cases"              # Qdrant collection name
