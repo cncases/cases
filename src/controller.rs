@@ -60,6 +60,7 @@ pub async fn case(
             && let Some(start) = case.full_text[..pos].rfind("<")
         {
             case.full_text = case.full_text[start..].to_owned();
+            case.full_text = mark_c_right_strict(&case.full_text);
         }
 
         #[allow(unused_mut)]
@@ -355,4 +356,69 @@ pub async fn similar(id: u32, qclient: &Qdrant) -> Vec<u32> {
         tracing::error!("Qdrant recommend {id} failed");
     }
     ids
+}
+
+fn mark_c_right_strict(html: &str) -> String {
+    let document = scraper::Html::parse_document(html);
+    let selector = scraper::Selector::parse("div").unwrap();
+
+    let start_keywords = ["审判员", "审判长", "执行长"];
+    let clerk_keyword = "书记员";
+
+    let mut started = false;
+    let mut in_clerk_block = false;
+
+    let mut output = String::new();
+
+    for div in document.select(&selector) {
+        let raw_text: String = div.text().collect::<Vec<_>>().join("");
+        let text = normalize_no_whitespace(&raw_text);
+
+        let is_start = start_keywords.iter().any(|k| text.starts_with(k));
+        let is_clerk = text.starts_with(clerk_keyword);
+
+        if !started && is_start {
+            started = true;
+        }
+
+        if started && is_clerk {
+            in_clerk_block = true;
+        }
+
+        let should_mark = started && (!in_clerk_block || is_clerk);
+
+        let mut div_html = div.html();
+
+        if should_mark {
+            let already_marked = div
+                .value()
+                .attr("class")
+                .map(|c| c.split_whitespace().any(|x| x == "c_right"))
+                .unwrap_or(false);
+
+            if !already_marked {
+                if div.value().attr("class").is_some() {
+                    div_html = div_html.replacen("class=\"", "class=\"c_right ", 1);
+                } else {
+                    div_html = div_html.replacen("<div", "<div class=\"c_right\"", 1);
+                }
+            }
+        }
+
+        output.push_str(&div_html);
+        output.push('\n');
+
+        if in_clerk_block && !is_clerk {
+            started = false;
+            in_clerk_block = false;
+        }
+    }
+
+    output
+}
+
+fn normalize_no_whitespace(s: &str) -> String {
+    s.chars()
+        .filter(|c| !c.is_whitespace() && *c != '　')
+        .collect()
 }

@@ -601,15 +601,19 @@ b.highlight {
         color: #3d7a8c !important;
     }
 
-    /* Full text styling for print */
     .full_text {
+        page-break-before: always;
+    }
+
+    .full_text,
+    #\32,
+    #\32 ~ div {
         font-family: "SimSun", "宋体", serif;
         font-size: 14pt;
         line-height: 2;
         text-indent: 2em;
         text-align: justify;
         margin-top: 0;
-        page-break-before: always;
         color: #000 !important;
     }
 
@@ -622,8 +626,8 @@ b.highlight {
     }
 
     .c_right {
-        text-align: right;
-        text-indent: 0;
+        text-align: right !important;
+        text-indent: 0 !important;
     }
 
     /* Prevent page breaks in awkward places */
@@ -632,15 +636,5 @@ b.highlight {
     div {
         orphans: 3;
         widows: 3;
-    }
-
-    /* Links in print */
-    a {
-        text-decoration: none;
-        color: #4a90a4 !important;
-    }
-
-    a[href^="http"]::after {
-        content: none;
     }
 }
