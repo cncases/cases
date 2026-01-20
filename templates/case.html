@@ -5,13 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             http-equiv="Content-Security-Policy"
-            content="default-src 'none'; img-src 'self'; script-src 'none'; style-src 'self'; object-src 'none'; font-src 'none'; form-action 'self'; frame-src 'none'; media-src 'none'; manifest-src 'none'; worker-src 'none';"
+            content="default-src 'none'; img-src 'self'; script-src 'none' 'unsafe-hashes' 'sha256-MguIPR6qNR8D3B+eAlK+bIRTZe8t3wkOY4B/56Me9FU='; style-src 'self'; object-src 'none'; font-src 'none'; form-action 'self'; frame-src 'none'; media-src 'none'; manifest-src 'none'; worker-src 'none';"
         />
         <title>裁判文书网 - {{case.case_id}} - {{case.case_name}}</title>
         <link rel="stylesheet" href="/style.css?v={{env!("CARGO_PKG_VERSION")}}" />
     </head>
     <body>
         <main class="search-results">
+            <a class="home_link" href="/">&#8617;</a>
             <div class="search-result-text">
                 <h3 class="underlineonhover">{{ case.case_name }}</h3>
                 <p><b>裁判日期</b>：{{ case.judgment_date }}</p>
@@ -24,10 +25,16 @@
                 <p><b>案由</b>：{{ case.cause }}</p>
                 <p><b>原始链接</b>：{{ case.doc_id }}</p>
                 <p><b>法律依据</b>：{{ case.legal_basis }}</p>
-                <br /><br /><br />
+                <br /><br />
+                <div class="print_button" title="打印 Ctrl + p (Win/Linux), Cmd + p (Mac)">
+                    <a onclick="window.print()">
+                        <?xml version="1.0" encoding="UTF-8"?><svg width="30px" height="30px" stroke-width="1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M17.5714 18H20.4C20.7314 18 21 17.7314 21 17.4V11C21 8.79086 19.2091 7 17 7H7C4.79086 7 3 8.79086 3 11V17.4C3 17.7314 3.26863 18 3.6 18H6.42857" stroke="#000000" stroke-width="1"></path><path d="M8 7V3.6C8 3.26863 8.26863 3 8.6 3H15.4C15.7314 3 16 3.26863 16 3.6V7" stroke="#000000" stroke-width="1"></path><path d="M6.09782 20.3151L6.42855 18L6.92639 14.5151C6.96862 14.2196 7.22177 14 7.52036 14H16.4796C16.7782 14 17.0313 14.2196 17.0736 14.5151L17.5714 18L17.9021 20.3151C17.9538 20.6766 17.6733 21 17.3082 21H6.69179C6.32666 21 6.04618 20.6766 6.09782 20.3151Z" stroke="#000000" stroke-width="1"></path><path d="M17 10.01L17.01 9.99889" stroke="#000000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </a>
+                </div>
+                <br />
                 <div class="full_text">{{ case.full_text }}</div>
-                <br /><br /><br />
                 {% if enable_similar %}
+                <br /><br /><br />
                 <div class="similar-cases" id="similar-cases">
                     <h3 class="underlineonhover">
                         <a href="/case/{{id}}?with_similar=true#similar-cases">相似文书</a>

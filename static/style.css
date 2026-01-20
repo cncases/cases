@@ -299,6 +299,14 @@ a:hover .underlineonhover::after {
     text-justify: inter-character;
 }
 
+.home_link {
+    font-size: 20pt;
+}
+
+.print_button {
+    text-align: right;
+}
+
 /* id="1" */
 #\31,
 .c_right {
@@ -526,6 +534,8 @@ b.highlight {
     .search-second-nav,
     .pagination,
     .similar-cases,
+    .print_button,
+    .home_link,
     footer {
         display: none !important;
     }
