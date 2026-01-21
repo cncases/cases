@@ -70,7 +70,7 @@ pub async fn case(
         #[cfg(feature = "vsearch")]
         {
             let mut with_similar = params.with_similar.unwrap_or(false);
-            if case.case_type != "刑事案件" {
+            if !case.case_type.starts_with("刑事") {
                 with_similar = false;
             } else {
                 enable_similar = true;
