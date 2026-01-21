@@ -290,7 +290,8 @@ a:hover .underlineonhover::after {
 }
 
 .full_text,
-#\32 {
+#\32,
+.full_text p {
     line-height: 25pt;
     text-indent: 30pt;
     margin: 0.5pt 0cm;
