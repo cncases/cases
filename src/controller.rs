@@ -1,4 +1,5 @@
 use askama::Template;
+use axum::Json;
 use axum::{
     body::Body,
     extract::{Path, Query, State},
@@ -126,6 +127,87 @@ pub struct SearchPage {
     search_type: String,
     enable_vsearch: bool,
     cases: Vec<(u32, String, Case)>,
+}
+
+pub async fn api_search(
+    Query(params): Query<QuerySearch>,
+    State(state): State<AppState>,
+) -> Json<serde_json::Value> {
+    let mut offset = params.offset.unwrap_or_default();
+    if offset > *MAX_RESULTS {
+        offset = *MAX_RESULTS
+    }
+    let search = params.search.unwrap_or_default();
+    let search_type =
+        if cfg!(feature = "vsearch") && params.search_type.as_deref() == Some("vsearch") {
+            "vsearch".to_owned()
+        } else {
+            "keyword".to_owned()
+        };
+    let limit = 1000000;
+    let mut ids: Vec<u32> = Vec::new();
+    if !search.trim().is_empty() {
+        if search_type == "keyword" {
+            let (query, _) = state.searcher.query_parser.parse_query_lenient(&search);
+            let searcher = state.searcher.reader.searcher();
+            let top_docs: Vec<(Score, DocAddress)> = searcher
+                .search(&query, &TopDocs::with_limit(limit).and_offset(offset))
+                .unwrap_or_default();
+            for (_score, doc_address) in top_docs {
+                if let Some(id) = searcher
+                    .doc::<TantivyDocument>(doc_address)
+                    .unwrap()
+                    .get_first(state.searcher.id)
+                    .unwrap()
+                    .as_u64()
+                {
+                    ids.push(id as u32);
+                }
+            }
+        } else {
+            #[cfg(feature = "vsearch")]
+            if search_type == "vsearch" {
+                let modle = match CONFIG.embedding_model {
+                    2 => EmbeddingModel::BGELargeZHV15,
+                    _ => EmbeddingModel::BGESmallZHV15,
+                };
+                let mut model = TextEmbedding::try_new(
+                    InitOptions::new(modle).with_show_download_progress(true),
+                )
+                .unwrap();
+                let query_vec = model.embed(vec![&search], None).unwrap();
+                let client = state.qclient;
+                let search_limit = limit + offset;
+                if let Ok(search_result) = client
+                    .search_points(
+                        SearchPointsBuilder::new(
+                            &CONFIG.collection_name,
+                            query_vec.into_iter().next().unwrap(),
+                            search_limit as u64,
+                        )
+                        .with_payload(false)
+                        .limit(limit as u64)
+                        .offset(offset as u64),
+                    )
+                    .await
+                {
+                    for point in &search_result.result {
+                        let id = point
+                            .id
+                            .as_ref()
+                            .unwrap()
+                            .point_id_options
+                            .as_ref()
+                            .unwrap();
+                        if let PointIdOptions::Num(id) = id {
+                            ids.push(*id as u32);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Json(serde_json::json!({"id": ids }))
 }
 
 pub async fn search(

@@ -1,5 +1,7 @@
 use axum::{Router, http::StatusCode, routing::get};
-use cases::{AppState, CONFIG, Tan, case, help, kv_sep_partition_option, search, style};
+use cases::{
+    AppState, CONFIG, Tan, api_search, case, help, kv_sep_partition_option, search, style,
+};
 use fjall::Config;
 
 use std::{net::SocketAddr, sync::Arc, time::Duration};
@@ -58,6 +60,7 @@ async fn main() {
         .route("/case/{id}", get(case))
         .route("/style.css", get(style))
         .route("/help.txt", get(help))
+        .route("/api/search", get(api_search))
         .layer(middleware_stack)
         .with_state(app_state);
 

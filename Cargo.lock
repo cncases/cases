@@ -626,6 +626,7 @@ dependencies = [
  "qdrant-client",
  "scraper",
  "serde",
+ "serde_json",
  "stop-words",
  "tantivy",
  "tantivy-jieba",
