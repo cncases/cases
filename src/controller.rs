@@ -17,6 +17,9 @@ use tantivy::{
 use tracing::info;
 
 #[cfg(feature = "vsearch")]
+use std::sync::Mutex;
+
+#[cfg(feature = "vsearch")]
 use fastembed::{EmbeddingModel, InitOptions, TextEmbedding};
 
 #[cfg(feature = "vsearch")]
@@ -128,6 +131,17 @@ pub struct SearchPage {
     cases: Vec<(u32, String, Case)>,
 }
 
+#[cfg(feature = "vsearch")]
+static MODEL: LazyLock<Mutex<TextEmbedding>> = LazyLock::new(|| {
+    let modle = match CONFIG.embedding_model {
+        2 => EmbeddingModel::BGELargeZHV15,
+        _ => EmbeddingModel::BGESmallZHV15,
+    };
+    let model =
+        TextEmbedding::try_new(InitOptions::new(modle).with_show_download_progress(true)).unwrap();
+    Mutex::new(model)
+});
+
 pub async fn search(
     Query(input): Query<QuerySearch>,
     State(state): State<AppState>,
@@ -174,17 +188,7 @@ pub async fn search(
             #[cfg(feature = "vsearch")]
             if search_type == "vsearch" {
                 {
-                    let modle = match CONFIG.embedding_model {
-                        2 => EmbeddingModel::BGELargeZHV15,
-                        _ => EmbeddingModel::BGESmallZHV15,
-                    };
-
-                    let mut model = TextEmbedding::try_new(
-                        InitOptions::new(modle).with_show_download_progress(true),
-                    )
-                    .unwrap();
-                    let query_vec = model.embed(vec![&search], None).unwrap();
-
+                    let query_vec = MODEL.lock().unwrap().embed(vec![&search], None).unwrap();
                     let client = state.qclient;
                     let search_limit = limit + offset;
                     total = search_limit;
