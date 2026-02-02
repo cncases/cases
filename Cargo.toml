@@ -5,7 +5,7 @@ edition = "2024"
 rust-version = "1.92"
 
 [dependencies]
-askama = { version = "0.15.1" }
+askama = { version = "0.15.4" }
 axum = { version = "0.8.8", features = [
     "http2",
     "query",
