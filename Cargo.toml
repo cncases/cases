@@ -24,7 +24,7 @@ fjall = { version = "2.11.2", default-features = false, features = [
 ] }
 indexmap = "2"
 jiff = { version = "0.2.17", default-features = false, features = ["std"] }
-qdrant-client = { version = "1.16.0", optional = true }
+qdrant-client = { version = "1.17.0", optional = true }
 scraper = "0.25.0"
 serde = { version = "1", features = ["derive"] }
 stop-words = "0.9.0"
