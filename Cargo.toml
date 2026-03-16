@@ -38,7 +38,7 @@ tracing = { version = "0.1", features = [
     "max_level_info",
 ] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-zip = { version = "7", default-features = false, features = ["deflate"] }
+zip = { version = "8", default-features = false, features = ["deflate"] }
 
 [features]
 default = []
