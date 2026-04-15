@@ -170,7 +170,12 @@ pub async fn search(
             total = searcher.search(&query, &Count).unwrap();
 
             let top_docs: Vec<(Score, DocAddress)> = searcher
-                .search(&query, &TopDocs::with_limit(limit).and_offset(offset))
+                .search(
+                    &query,
+                    &TopDocs::with_limit(limit)
+                        .and_offset(offset)
+                        .order_by_score(),
+                )
                 .unwrap_or_default();
 
             for (_score, doc_address) in top_docs {
