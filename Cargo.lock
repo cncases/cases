@@ -3827,7 +3827,7 @@ dependencies = [
  "tantivy-fst",
  "tantivy-query-grammar",
  "tantivy-stacker",
- "tantivy-tokenizer-api",
+ "tantivy-tokenizer-api 0.6.0",
  "tempfile",
  "thiserror 2.0.18",
  "time",
@@ -3886,13 +3886,13 @@ dependencies = [
 
 [[package]]
 name = "tantivy-jieba"
-version = "0.18.0"
+version = "0.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "128e01d2aab35a1e945d0d3ca0aa5a0ec29fb856c41bc34019d84ffa642d2253"
+checksum = "ba2f281cd954d67a5ebc3a74f5ba27c10d12dd4440f91803e9935fa32a45cbac"
 dependencies = [
  "jieba-rs",
  "lazy_static",
- "tantivy-tokenizer-api",
+ "tantivy-tokenizer-api 0.7.0",
 ]
 
 [[package]]
@@ -3936,6 +3936,15 @@ name = "tantivy-tokenizer-api"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23024f6aeb25ceb1a0e27740c84bdb0fae52626737b7e9a9de6ad5aa25c7b038"
+dependencies = [
+ "serde",
+]
+
+[[package]]
+name = "tantivy-tokenizer-api"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "eac258c2c6390673f2685813afeeafcb8c4e0ee7de8dd3fc46838dcc37263f98"
 dependencies = [
  "serde",
 ]
