@@ -620,7 +620,7 @@ dependencies = [
  "fastembed",
  "fjall",
  "indexmap 2.14.0",
- "jieba-rs",
+ "jieba-rs 0.9.0",
  "jiff",
  "parquet",
  "qdrant-client",
@@ -2019,6 +2019,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "jieba-macros"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a29cfc5dcd898604c6f80363411fa6b6b08e27d1d253d6225b9cb6702ea02fc0"
+dependencies = [
+ "phf_codegen",
+]
+
+[[package]]
 name = "jieba-rs"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2026,7 +2035,21 @@ checksum = "766bd7012aa5ba49411ebdf4e93bddd59b182d2918e085d58dec5bb9b54b7105"
 dependencies = [
  "cedarwood",
  "include-flate",
- "jieba-macros",
+ "jieba-macros 0.8.1",
+ "phf",
+ "regex",
+ "rustc-hash",
+]
+
+[[package]]
+name = "jieba-rs"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3245d6e9d1d5facbd6a23848d6b67e3439738ccbb4fa5a3d65da315ba1a910a2"
+dependencies = [
+ "cedarwood",
+ "include-flate",
+ "jieba-macros 0.9.0",
  "phf",
  "regex",
  "rustc-hash",
@@ -3890,7 +3913,7 @@ version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "128e01d2aab35a1e945d0d3ca0aa5a0ec29fb856c41bc34019d84ffa642d2253"
 dependencies = [
- "jieba-rs",
+ "jieba-rs 0.8.1",
  "lazy_static",
  "tantivy-tokenizer-api",
 ]
