@@ -28,7 +28,7 @@ qdrant-client = { version = "1", optional = true }
 scraper = "0.26.0"
 serde = { version = "1", features = ["derive"] }
 stop-words = "0.10.0"
-tantivy = "0.25.0"
+tantivy = "0.26.0"
 tantivy-jieba = "0.18.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tower = "0.5.3"
