@@ -110,9 +110,9 @@ fn unzip(path: &str) {
     }
 
     let mut meta_count: Vec<_> = meta_count.into_iter().collect();
-    meta_count.sort_by(|a, b| b.1.cmp(&a.1));
+    meta_count.sort_by_key(|b| std::cmp::Reverse(b.1));
     let mut fulltext_count: Vec<_> = fulltext_count.into_iter().collect();
-    fulltext_count.sort_by(|a, b| b.1.cmp(&a.1));
+    fulltext_count.sort_by_key(|b| std::cmp::Reverse(b.1));
 
     let mut meta_file = fs::File::create("meta.txt").unwrap();
     for (word, count) in meta_count {
