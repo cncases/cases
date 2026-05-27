@@ -78,19 +78,19 @@ fn unzip(path: &str) {
                         let meta_words = jieba.cut(&meta, false);
                         let fulltext_words = jieba.cut(&fulltext, false);
 
-                        for word in meta_words {
-                            if custom_stop_words.contains(word) {
+                        for token in meta_words {
+                            if custom_stop_words.contains(token.word) {
                                 continue;
                             }
-                            let count = meta_count.entry(word.to_owned()).or_insert(0);
+                            let count = meta_count.entry(token.word.to_owned()).or_insert(0);
                             *count += 1;
                         }
 
-                        for word in fulltext_words {
-                            if custom_stop_words.contains(word) {
+                        for token in fulltext_words {
+                            if custom_stop_words.contains(token.word) {
                                 continue;
                             }
-                            let count = fulltext_count.entry(word.to_owned()).or_insert(0);
+                            let count = fulltext_count.entry(token.word.to_owned()).or_insert(0);
                             *count += 1;
                         }
 
