@@ -45,7 +45,7 @@ default = []
 vsearch = ["fastembed", "qdrant-client"]
 
 [target.'cfg(not(target_os = "windows"))'.dependencies]
-tikv-jemallocator = "0.6"
+tikv-jemallocator = "0.7"
 
 [dev-dependencies]
 arrow = { version = "58", default-features = false }
