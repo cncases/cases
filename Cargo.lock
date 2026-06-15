@@ -1297,9 +1297,9 @@ checksum = "9afc2bd4d5a73106dd53d10d73d3401c2f32730ba2c0b93ddb888a8983680471"
 
 [[package]]
 name = "fastembed"
-version = "5.16.0"
+version = "5.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "add59222e7bc3787285f993744b244cd454d78571845623606bdc45b22b23a4e"
+checksum = "3e6577123233d707a614ed9170e20262ba3c2cf57015eef4f641f7ae30303f00"
 dependencies = [
  "anyhow",
  "hf-hub",
@@ -3468,13 +3468,15 @@ checksum = "9774ba4a74de5f7b1c1451ed6cd5285a32eddb5cccb8cc655a4e50009e06477f"
 
 [[package]]
 name = "safetensors"
-version = "0.7.0"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "675656c1eabb620b921efea4f9199f97fc86e36dd6ffd1fbbe48d0f59a4987f5"
+checksum = "79b079b829cb27a1c3c374341345ed2e8b2c0c839034522cee576c140bd7f846"
 dependencies = [
  "hashbrown 0.16.1",
+ "libc",
  "serde",
  "serde_json",
+ "tempfile",
 ]
 
 [[package]]
