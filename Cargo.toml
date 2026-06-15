@@ -51,7 +51,7 @@ tikv-jemallocator = "0.7"
 arrow = { version = "58", default-features = false }
 clickhouse = { version = "0.15.0" }
 jieba-rs = "0.10.0"
-parquet = { version = "58", default-features = false, features = [
+parquet = { version = "59", default-features = false, features = [
     "arrow",
     "lz4",
 ] }
