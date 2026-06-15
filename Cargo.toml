@@ -48,7 +48,7 @@ vsearch = ["fastembed", "qdrant-client"]
 tikv-jemallocator = "0.7"
 
 [dev-dependencies]
-arrow = { version = "58", default-features = false }
+arrow = { version = "59", default-features = false }
 clickhouse = { version = "0.15.0" }
 jieba-rs = "0.10.0"
 parquet = { version = "58", default-features = false, features = [
