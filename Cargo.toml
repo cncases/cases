@@ -32,7 +32,7 @@ tantivy = "0.26"
 tantivy-jieba = "0.20.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tower = "0.5.3"
-tower-http = { version = "0.6.11", features = ["compression-zstd", "timeout"] }
+tower-http = { version = "0.7.0", features = ["compression-zstd", "timeout"] }
 tracing = { version = "0.1", features = [
     "release_max_level_info",
     "max_level_info",
