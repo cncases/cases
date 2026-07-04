@@ -32,7 +32,7 @@ tantivy = "0.26"
 tantivy-jieba = "0.20.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tower = "0.5.3"
-tower-http = { version = "0.6.11", features = ["compression-zstd", "timeout"] }
+tower-http = { version = "0.7", features = ["compression-zstd", "timeout"] }
 tracing = { version = "0.1", features = [
     "release_max_level_info",
     "max_level_info",
@@ -48,10 +48,10 @@ vsearch = ["fastembed", "qdrant-client"]
 tikv-jemallocator = "0.7"
 
 [dev-dependencies]
-arrow = { version = "58", default-features = false }
+arrow = { version = "59", default-features = false }
 clickhouse = { version = "0.15.0" }
 jieba-rs = "0.10.0"
-parquet = { version = "58", default-features = false, features = [
+parquet = { version = "59", default-features = false, features = [
     "arrow",
     "lz4",
 ] }
