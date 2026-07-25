@@ -1,6 +1,6 @@
 [package]
 name = "cases"
-version = "0.2.10"
+version = "0.2.12"
 edition = "2024"
 rust-version = "1.92"
 
