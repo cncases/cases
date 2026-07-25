@@ -1,3 +1,5 @@
+更多合作请发邮件至 contact@caseopen.org （请勿使用微软旗下邮箱服务如outlook.com）
+
 ### 关键词查询语法简明指南
 
 可用字段一览：
@@ -95,6 +97,16 @@ https://docs.rs/tantivy/latest/tantivy/query/struct.QueryParser.html
 
 导出功能：
 最多导出10000条，调整offset参数可获得更多结果，offset=10000，即可获得第10000~20000条结果。如：
-https://caseopen.org/?search=%E6%8B%90%E5%8D%96&offset=10000&search_type=default&export=true
+https://caseopen.org/?search=%E6%8B%90%E5%8D%96&offset=10000&search_type=keyword&export=true
 
-更多合作请发邮件至 contact@caseopen.org
+-----------------------------
+
+api:
+
+/api/search?search=拐卖妇女儿童
+
+可选参数：
+- search_type: keyword（默认关键词搜索）/ vsearch（语义搜索，刑事案件可用）
+- offset: 偏移量，默认0
+
+如：/api/search?search=拐卖妇女儿童&search_type=vsearch&offset=100

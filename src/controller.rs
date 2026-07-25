@@ -236,6 +236,17 @@ async fn search_cases(
                 }
             }
         }
+
+        let elapsed = now.elapsed().as_secs_f32();
+        if export {
+            info!(
+                "export {search_type} {search}, total:{total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s"
+            );
+        } else {
+            info!(
+                "search {search_type} {search}, total:{total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s "
+            );
+        }
     }
 
     let mut cases = Vec::with_capacity(ids.len());
@@ -264,17 +275,6 @@ async fn search_cases(
             };
             cases.push(case_data);
         }
-    }
-
-    let elapsed = now.elapsed().as_secs_f32();
-    if export {
-        info!(
-            "export {search_type} {search}, total:{total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s"
-        );
-    } else {
-        info!(
-            "search {search_type} {search}, total:{total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s "
-        );
     }
 
     let search_meta = SearchMeta {
