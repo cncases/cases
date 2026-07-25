@@ -58,7 +58,7 @@
             {% if search_meta.search_type == "keyword" %}
                 {% if search_meta.total < 30 %}
                     {% if !search_meta.search.is_empty() %}
-                    <p class="suggest_vsearch">当前结果较少，建议使用 <a href="/?search={{ search_meta.search }}&search_meta.search_type=vsearch">语义搜索</a></p>
+                    <p class="suggest_vsearch">当前结果较少，建议使用 <a href="/?search={{ search_meta.search }}&search_type=vsearch">语义搜索</a></p>
                     {% endif %}
                 {% endif %}
             {% endif %}
