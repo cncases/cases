@@ -124,12 +124,8 @@ pub struct QuerySearch {
 #[derive(Template)]
 #[template(path = "search.html")]
 pub struct SearchPage {
-    search: String,
-    offset: usize,
-    total: usize,
-    search_type: String,
-    enable_vsearch: bool,
-    cases: Vec<(u32, String, Case)>,
+    search_meta: SearchMeta,
+    cases: Vec<CaseData>,
 }
 
 #[cfg(feature = "vsearch")]
@@ -143,10 +139,22 @@ static MODEL: LazyLock<Mutex<TextEmbedding>> = LazyLock::new(|| {
     Mutex::new(model)
 });
 
-pub async fn search(
+#[derive(Serialize)]
+struct SearchMeta {
+    offset: usize,
+    search: String,
+    search_type: String,
+    limit: usize,
+    total: usize,
+    export: bool,
+    enable_vsearch: bool,
+}
+
+async fn search_cases(
     Query(input): Query<QuerySearch>,
     State(state): State<AppState>,
-) -> impl IntoResponse {
+) -> (Vec<CaseData>, SearchMeta) {
+    let now = std::time::Instant::now();
     let mut offset = input.offset.unwrap_or_default();
     if offset > *MAX_RESULTS {
         offset = *MAX_RESULTS
@@ -163,7 +171,6 @@ pub async fn search(
     let mut ids: IndexSet<u32> = IndexSet::with_capacity(20);
     let mut total = 0;
     if !search.trim().is_empty() {
-        let now = std::time::Instant::now();
         let search = fast2s::convert(&search);
         if search_type == "keyword" {
             let (query, _) = state.searcher.query_parser.parse_query_lenient(&search);
@@ -229,17 +236,6 @@ pub async fn search(
                 }
             }
         }
-
-        let elapsed = now.elapsed().as_secs_f32();
-        if export {
-            info!(
-                "export {search_type} {search}, total:{total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s"
-            );
-        } else {
-            info!(
-                "search {search_type} {search}, total:{total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s "
-            );
-        }
     }
 
     let mut cases = Vec::with_capacity(ids.len());
@@ -250,13 +246,59 @@ pub async fn search(
                 .chars()
                 .take(240)
                 .collect();
-            cases.push((id, preview, case));
+            let case_data = CaseData {
+                id,
+                preview,
+                doc_id: case.doc_id,
+                case_id: case.case_id,
+                case_name: case.case_name,
+                court: case.court,
+                case_type: case.case_type,
+                procedure: case.procedure,
+                judgment_date: case.judgment_date,
+                public_date: case.public_date,
+                parties: case.parties,
+                cause: case.cause,
+                legal_basis: case.legal_basis,
+                full_text: case.full_text,
+            };
+            cases.push(case_data);
         }
     }
 
-    // export to csv
+    let elapsed = now.elapsed().as_secs_f32();
     if export {
-        let fname = format!("{search}_{total}_{limit}_{offset}.csv");
+        info!(
+            "export {search_type} {search}, total:{total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s"
+        );
+    } else {
+        info!(
+            "search {search_type} {search}, total:{total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s "
+        );
+    }
+
+    let search_meta = SearchMeta {
+        offset,
+        search,
+        search_type,
+        total,
+        export,
+        limit,
+        enable_vsearch: cfg!(feature = "vsearch"),
+    };
+
+    (cases, search_meta)
+}
+
+pub async fn search(query: Query<QuerySearch>, state: State<AppState>) -> impl IntoResponse {
+    let (cases, search_meta) = search_cases(query, state).await;
+
+    // export to csv
+    if search_meta.export {
+        let fname = format!(
+            "{}_{}_{}_{}.csv",
+            search_meta.search, search_meta.total, search_meta.limit, search_meta.offset
+        );
         let body = Vec::new();
         let mut wtr = csv::Writer::from_writer(body);
         wtr.write_record([
@@ -275,9 +317,9 @@ pub async fn search(
             "full_text",
         ])
         .unwrap();
-        for (id, _, case) in &cases {
+        for case in &cases {
             wtr.write_record([
-                &id.to_string(),
+                &case.id.to_string(),
                 &case.doc_id,
                 &case.case_id,
                 &case.case_name,
@@ -305,145 +347,38 @@ pub async fn search(
         return (headers, wtr.into_inner().unwrap()).into_response();
     }
 
-    let body = SearchPage {
-        search,
-        search_type,
-        offset,
-        cases,
-        total,
-        enable_vsearch: cfg!(feature = "vsearch"),
-    };
-
+    let body = SearchPage { search_meta, cases };
     into_response(&body)
 }
 
-#[derive(Debug, Serialize)]
-struct CaseDetail {
-    id: u32,
-    case: Case,
-}
-
-pub async fn api_search(
-    Query(input): Query<QuerySearch>,
-    State(state): State<AppState>,
-) -> impl IntoResponse {
-    let mut offset = input.offset.unwrap_or_default();
-    if offset > *MAX_RESULTS {
-        offset = *MAX_RESULTS
-    }
-    let search = input.search.unwrap_or_default();
-    let search_type =
-        if cfg!(feature = "vsearch") && input.search_type.as_deref() == Some("vsearch") {
-            "vsearch".to_owned()
-        } else {
-            "keyword".to_owned()
-        };
-    let limit = 20;
-    let mut ids: IndexSet<u32> = IndexSet::with_capacity(20);
-    let mut total = 0;
-    if !search.trim().is_empty() {
-        let now = std::time::Instant::now();
-        let search = fast2s::convert(&search);
-        if search_type == "keyword" {
-            let (query, _) = state.searcher.query_parser.parse_query_lenient(&search);
-            let searcher = state.searcher.reader.searcher();
-            total = searcher.search(&query, &Count).unwrap();
-
-            let top_docs: Vec<(Score, DocAddress)> = searcher
-                .search(
-                    &query,
-                    &TopDocs::with_limit(limit)
-                        .and_offset(offset)
-                        .order_by_score(),
-                )
-                .unwrap_or_default();
-
-            for (_score, doc_address) in top_docs {
-                if let Some(id) = searcher
-                    .doc::<TantivyDocument>(doc_address)
-                    .unwrap()
-                    .get_first(state.searcher.id)
-                    .unwrap()
-                    .as_u64()
-                {
-                    ids.insert(id as u32);
-                }
-            }
-        } else {
-            #[cfg(feature = "vsearch")]
-            if search_type == "vsearch" {
-                {
-                    let query_vec = MODEL.lock().unwrap().embed(vec![&search], None).unwrap();
-                    let client = state.qclient;
-                    let search_limit = limit + offset;
-                    total = search_limit;
-                    if let Ok(search_result) = client
-                        .search_points(
-                            SearchPointsBuilder::new(
-                                &CONFIG.collection_name,
-                                query_vec.into_iter().next().unwrap(),
-                                search_limit as u64,
-                            )
-                            .with_payload(false)
-                            .limit(limit as u64)
-                            .offset(offset as u64),
-                        )
-                        .await
-                    {
-                        for point in &search_result.result {
-                            let id = point
-                                .id
-                                .as_ref()
-                                .unwrap()
-                                .point_id_options
-                                .as_ref()
-                                .unwrap();
-                            if let PointIdOptions::Num(id) = id {
-                                ids.insert(*id as u32);
-                            }
-                        }
-                    } else {
-                        tracing::error!("Qdrant search_points failed");
-                    }
-                }
-            }
-        }
-
-        let elapsed = now.elapsed().as_secs_f32();
-
-        info!(
-            "api search {search_type} {search}, total:{total}, offset: {offset}, limit: {limit}, elapsed: {elapsed}s "
-        );
-    }
-
-    let mut cases = Vec::with_capacity(ids.len());
-    for id in ids {
-        if let Some(v) = state.db.get(id.to_be_bytes()).unwrap() {
-            let (case, _): (Case, _) = bincode::decode_from_slice(&v, standard()).unwrap();
-            let case_detail = CaseDetail { id, case };
-            cases.push(case_detail);
-        }
-    }
-    let search_data = SearchData {
-        search,
-        search_type,
-        offset,
-        cases,
-        total,
-        enable_vsearch: cfg!(feature = "vsearch"),
-    };
-
+pub async fn api_search(query: Query<QuerySearch>, state: State<AppState>) -> impl IntoResponse {
+    let (cases, search_meta) = search_cases(query, state).await;
+    let search_data = SearchData { search_meta, cases };
     Json(search_data).into_response()
 }
 
 #[derive(Serialize)]
+pub struct CaseData {
+    id: u32,
+    preview: String,
+    doc_id: String,
+    case_id: String,
+    case_name: String,
+    court: String,
+    case_type: String,
+    procedure: String,
+    judgment_date: String,
+    public_date: String,
+    parties: String,
+    cause: String,
+    legal_basis: String,
+    full_text: String,
+}
+
+#[derive(Serialize)]
 pub struct SearchData {
-    search: String,
-    offset: usize,
-    total: usize,
-    search_type: String,
-    enable_vsearch: bool,
-    cases: Vec<CaseDetail>,
+    search_meta: SearchMeta,
+    cases: Vec<CaseData>,
 }
 
 pub async fn style() -> impl IntoResponse {
