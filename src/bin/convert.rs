@@ -40,7 +40,7 @@ fn convert(raw_path: &str, db_path: &str) {
             let mut buf = String::new();
             for i in 0..archive.len() {
                 let file = archive.by_index(i).unwrap();
-                let raw_name = file.name();
+                let raw_name = file.name().unwrap();
                 if raw_name.ends_with(".csv") {
                     let mut rdr = csv::Reader::from_reader(file);
                     for result in rdr.deserialize() {

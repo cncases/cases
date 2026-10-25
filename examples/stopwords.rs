@@ -41,7 +41,7 @@ fn unzip(path: &str) {
 
             for i in 0..archive.len() {
                 let file = archive.by_index(i).unwrap();
-                let raw_name = file.name();
+                let raw_name = file.name().unwrap();
                 if raw_name.ends_with(".csv") {
                     let mut rdr = csv::Reader::from_reader(file);
                     let mut j = 0;
