@@ -26,7 +26,6 @@ fjall = { version = "2.11.2", default-features = false, features = [
     "miniz",
 ] }
 indexmap = "2"
-jiff = { version = "0.2", default-features = false, features = ["std"] }
 qdrant-client = { version = "=1.18", optional = true }
 scraper = "0.29.0"
 serde = { version = "1", features = ["derive"] }
@@ -54,6 +53,7 @@ tikv-jemallocator = "0.7"
 arrow = { version = "60", default-features = false }
 clickhouse = { version = "0.15.3" }
 jieba-rs = "0.11.0"
+jiff = { version = "1", default-features = false, features = ["std"] }
 parquet = { version = "60", default-features = false, features = [
     "arrow",
     "lz4",
