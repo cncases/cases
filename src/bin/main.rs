@@ -11,9 +11,6 @@ use tower_http::{compression::CompressionLayer, timeout::TimeoutLayer};
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-#[cfg(feature = "vsearch")]
-use qdrant_client::Qdrant;
-
 #[cfg(not(target_os = "windows"))]
 #[global_allocator]
 static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
@@ -35,17 +32,7 @@ async fn main() {
         .open_partition("cases", kv_sep_partition_option())
         .unwrap();
 
-    #[cfg(feature = "vsearch")]
-    let qclient = Qdrant::from_url(CONFIG.qdrant_grpc.as_str())
-        .build()
-        .unwrap();
-
-    let app_state = AppState {
-        db,
-        searcher,
-        #[cfg(feature = "vsearch")]
-        qclient,
-    };
+    let app_state = AppState { db, searcher };
 
     let middleware_stack =
         ServiceBuilder::new()

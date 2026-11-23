@@ -33,23 +33,6 @@
                 </div>
                 <br />
                 <div class="full_text">{{ case.full_text }}</div>
-                {% if enable_similar %}
-                <br /><br /><br />
-                <div class="similar-cases" id="similar-cases">
-                    <h3 class="underlineonhover">
-                        <a href="/case/{{id}}?with_similar=true#similar-cases">相似文书</a>
-                    </h3>
-                    {% if similar_cases.len() > 0 %}
-                    <ul>
-                        {% for (sim_id, sim_case_name, sim_case_id) in similar_cases %}
-                        <li>
-                            <a class="similar-link" href="/case/{{sim_id}}?with_similar=true">{{sim_case_id}}</a> - {{sim_case_name}}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                </div>
-                {% endif %}
             </div>
         </main>
         <footer>
