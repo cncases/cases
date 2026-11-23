@@ -1,13 +1,12 @@
 [package]
 name = "cases"
-version = "0.2.12"
+version = "0.3.0"
 edition = "2024"
 rust-version = "1.92"
 
 [dependencies]
 askama = { version = "0.16" }
 axum = { version = "0.8.9", features = [
-    "http2",
     "query",
     "tokio",
     "http1",
