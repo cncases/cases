@@ -83,18 +83,6 @@ https://docs.rs/tantivy/latest/tantivy/query/struct.QueryParser.html
 
 -----------------------------
 
-### 语义搜索说明（如果已开启）
-
-因服务器资源限制，仅对刑事案件开启。
-
-语义搜索通过向量匹配技术，对某些查询结果较好，如：
-
-北京动物保护
-
-关键词查询和语义搜索结果非常不同。
-
------------------------------
-
 导出功能：
 最多导出10000条，调整offset参数可获得更多结果，offset=10000，即可获得第10000~20000条结果。如：
 https://caseopen.org/?search=%E6%8B%90%E5%8D%96&offset=10000&search_type=keyword&export=true
@@ -106,7 +94,6 @@ api:
 /api/search?search=拐卖妇女儿童
 
 可选参数：
-- search_type: keyword（默认关键词搜索）/ vsearch（语义搜索，刑事案件可用）
 - offset: 偏移量，默认0
 
-如：/api/search?search=拐卖妇女儿童&search_type=vsearch&offset=100
+如：/api/search?search=拐卖妇女儿童&offset=100
